@@ -10,7 +10,7 @@ class KeyPress():
         Initialize pygame and opens window
         """
         pygame.init()
-        win = pygame.display.set_mode((200, 200))
+        screen = pygame.display.set_mode((400, 200))
 
     def getKey(self, key):
         """

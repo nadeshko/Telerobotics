@@ -1,5 +1,6 @@
 import os, sys
 from KeyPress_Module import KeyPress
+from RobotControl import Robot_Control
 
 # Setup pygame
 Kp = KeyPress()
@@ -7,27 +8,30 @@ Kp = KeyPress()
 
 def main():
     window = True
+
     if Kp.getKey('w'):
         if Kp.getKey('d'):
-            print('Moving north-east')
+            Robot_Control('wd')
         elif Kp.getKey('a'):
-            print('Moving north-west')
-        else: print('Moving forward')
+            Robot_Control('wa')
+        else: Robot_Control('w')
     elif Kp.getKey('s'):
         if Kp.getKey('d'):
-            print('Moving south-east')
+            Robot_Control('sd')
         elif Kp.getKey('a'):
-            print('Moving south-west')
-        else: print('Moving backwards')
+            Robot_Control('sa')
+        else: Robot_Control('s')
     elif Kp.getKey('a'):
-        print('Turning left')
+        Robot_Control('a')
     elif Kp.getKey('d'):
-        print('Turning right')
+        Robot_Control('d')
+    elif Kp.getKey('LSHIFT'):
+        Robot_Control('LSHIFT')
     elif Kp.getKey('q'):
         print('quitting')
         window = False
     else:
-        pass
+        Robot_Control('STOP')
     return window
 
 if __name__ == '__main__':
@@ -35,5 +39,3 @@ if __name__ == '__main__':
         window = main()
         if window == False:
             break
-
-
