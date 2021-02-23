@@ -6,7 +6,7 @@ from _XiaoRGEEK_SERVO_ import XR_Servo
 
 screen = pygame.display.set_mode([500,300])
 
-## Set GPIO call mode as BCM
+# Set GPIO call mode as BCM
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
