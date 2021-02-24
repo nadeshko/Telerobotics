@@ -1,9 +1,13 @@
 from _XiaoRGEEK_SERVO_ import XR_Servo
 
+###########################################################################
+###                             SERVO MODULE                            ###
+###########################################################################
+
 # Initializing Servo for robot arms
 Servo = XR_Servo()
 
-class Servo():
+class Servo_control():
     def __init__(self, S1, S2, S3, S4, S7, S8):
         self.S1 = S1
         self.S2 = S2
@@ -96,3 +100,11 @@ class Servo():
             else:
                 self.S8 += 5
             Servo.XiaoRGEEK_SetServoAngle(servo, self.S8)
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    servo = Servo(0, 120, 90, 0, 0, 90)
+    while True:
+        main()

@@ -1,19 +1,29 @@
 from KeyPress_Module import KeyPress
+from MotorModule import Motor_Control
+from ServoModule import Servo_control
+from CameraModule import Camera
+
+###########################################################################
+###                             ROBOT MAIN                              ###
+###########################################################################
 
 Kp = KeyPress()
+# Define motor ports
+motor = Motor_Control(13, 20, 19, 16, 21, 26)
+# Initializing Servo Angles
+servo = Servo_control(0, 120, 90, 0, 0, 90)
+# Starting Camera
+camera = Camera()
 
 def main():
     '''
-    Main function, sends Keyboard press to robot class
+    Main function, sends Keyboard press to robot classes
     '''
-    from MotorModule import Motor
-    from ServoModule import Servo
     close = True
     Speed = 0
-    # Define motor ports
-    motor = Motor(13, 20, 19, 16, 21, 26)
-    # Initializing Servo Angles
-    servo = Servo(0, 120, 90, 0, 0, 90)
+
+    # Show Camera window
+    camera.open()
 
     # Robot acceleration/decceleration
     if Kp.getKey('LSHIFT'):
@@ -72,11 +82,12 @@ def main():
     elif Kp.getKey('RIGHT'):
         servo.up(8)
 
-    elif Kp.getKey('q'):
+    elif Kp.getKey('ESC'):
         print("quitting...")
+        camera.close()
         close = False
     else:
-        motor.Stop(0)
+        motor.Stop()
     return close
 
 if __name__ == '__main__':

@@ -1,10 +1,14 @@
 import RPi.GPIO as GPIO
 
+###########################################################################
+###                            Motor Module                             ###
+###########################################################################
+
 # Set GPIO call mode as BCM
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-class Motor():
+class Motor_Control():
     def __init__(self, ENA, ENB, IN1, IN2, IN3, IN4):
         self.ENA = ENA
         self.ENB = ENB
@@ -30,6 +34,7 @@ class Motor():
         self.RightM.start(0)
         self.LeftM.start(0)
 
+    # Movement functions
     def Forward(self, Speed = 0.5, turn = 0):
         Speed *= 100
         turn *= 100
@@ -76,6 +81,7 @@ class Motor():
         GPIO.output(self.IN3, True)
         GPIO.output(self.IN4, False)
 
+    # Stop function
     def Stop(self):
         self.RightM.ChangeDutyCycle(0)
         self.LeftM.ChangeDutyCycle(0)
@@ -91,6 +97,7 @@ def main():
 
 if __name__ == '__main__':
     motor1 = Motor(13, 20, 19, 16, 21, 26)
-    main()
+    while True:
+        main()
 
 
