@@ -7,6 +7,7 @@ from CameraModule import Camera
 ###                             ROBOT MAIN                              ###
 ###########################################################################
 
+# Initialize pygame
 Kp = KeyPress()
 # Define motor ports
 motor = Motor_Control(13, 20, 19, 16, 21, 26)
