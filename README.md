@@ -12,6 +12,8 @@ The code for controlling the robot was written with Python 3.9.2.
 
 [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) and [WinSCP](https://winscp.net/eng/index.php) was used to communicate with the raspberry pi in the robot.
 
+[Xming](https://sourceforge.net/projects/xming/) is required to display the pygame window through PuTTy.
+
 ## Executing Code
 RobotMain is the main code of this program
 
