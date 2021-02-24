@@ -14,4 +14,5 @@ The code for controlling the robot was written with Python 3.9.2.
 
 ## Executing Code
 RobotMain is the main code of this program
+
 With putty opened, ```python RobotMain.py``` can be executed at its path.
