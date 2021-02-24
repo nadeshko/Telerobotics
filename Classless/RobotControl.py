@@ -25,11 +25,11 @@ x = 0
 y = 0
 angle = 0
 
-def init():
-    # Set GPIO call mode as BCM
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
+# Set GPIO call mode as BCM
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
 
+def init():
     # Initializing Servo for robot arms
     Servo = XR_Servo()
     Servo.XiaoRGEEK_SetServoAngle(1, S1_Angle)
