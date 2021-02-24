@@ -35,9 +35,8 @@ class Motor_Control():
         self.LeftM.start(0)
 
     # Movement functions
-    def Forward(self, Speed = 0.5, turn = 0):
+    def Forward(self, Speed):
         Speed *= 100
-        turn *= 100
         self.RightM.ChangeDutyCycle(Speed)
         self.LeftM.ChangeDutyCycle(Speed)
         GPIO.output(self.ENA, True)
@@ -47,9 +46,8 @@ class Motor_Control():
         GPIO.output(self.IN3, False)
         GPIO.output(self.IN4, True)
 
-    def Backward(self, Speed = 0.5, turn = 0):
+    def Backward(self, Speed):
         Speed *= 100
-        turn *= 100
         self.RightM.ChangeDutyCycle(Speed)
         self.LeftM.ChangeDutyCycle(Speed)
         GPIO.output(self.ENA, True)

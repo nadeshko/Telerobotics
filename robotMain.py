@@ -15,42 +15,45 @@ motor = Motor_Control(13, 20, 19, 16, 21, 26)
 servo = Servo_control(0, 120, 90, 0, 0, 90)
 # Starting Camera
 camera = Camera()
+Speed = 0
 
 def main():
     '''
     Main function, sends Keyboard press to robot classes
     '''
+    global Speed
     close = True
-    Speed = 0
 
     # Show Camera window
-    camera.open()
-
-    # Robot acceleration/decceleration
-    if Kp.getKey('LSHIFT'):
-        if Speed >= 1:
-            Speed = 1
-        else:
-            Speed += 0.1
-    elif Kp.getKey('LCTRL'):
-        if Speed <= 0:
-            Speed = 0
-        else:
-            Speed -= 0.1
+    out = camera.open()
 
     # Robot Movements with WASD
-    elif Kp.getKey('w'):
-        motor.Forward(Speed, 0)
+    if Kp.getKey('w'):
+        motor.Forward(Speed)
         print('Moving forward')
     elif Kp.getKey('s'):
-        motor.Backward(Speed, 0)
-        print('Turning right')
+        motor.Backward(Speed)
+        print('Moving backwards')
     elif Kp.getKey('a'):
         motor.Left(Speed)
         print('Turning left')
     elif Kp.getKey('d'):
         motor.Right(Speed)
-        print('Moving backwards')
+        print('Turning right')
+
+    # Robot acceleration/decceleration
+    elif Kp.getKey('LSHIFT'):
+        if Speed >= 1:
+            Speed = 1
+        else:
+            Speed += 0.1
+            print(Speed)
+    elif Kp.getKey('LCTRL'):
+        if Speed <= 0:
+            Speed = 0
+        else:
+            Speed -= 0.1
+            print(Speed)
 
     # Servo 1 Control
     elif Kp.getKey('KP4'):
@@ -78,12 +81,12 @@ def main():
     elif Kp.getKey('DOWN'):
         servo.up(7)
     # Servo 8 Control
-    elif Kp.getKey('LEFT'):
-        servo.down(8)
     elif Kp.getKey('RIGHT'):
+        servo.down(8)
+    elif Kp.getKey('LEFT'):
         servo.up(8)
 
-    elif Kp.getKey('ESC'):
+    elif Kp.getKey('ESCAPE') or out == True:
         print("quitting...")
         camera.close()
         close = False

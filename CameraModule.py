@@ -7,12 +7,14 @@ import numpy as np
 
 class Camera():
     def __init__(self):
+        self.img_counter = 0
+        self.out = False
+
         # Allow Camera
         self.cam = cv2.VideoCapture(0)
         print("Starting Camera")
 
     def open(self):
-        img_counter = 0
         ret, frame = self.cam.read()
         cv2.imshow('Camera', frame)
 
@@ -20,13 +22,14 @@ class Camera():
 
         if k % 256 == 27:  # ESC
             print("Closing...")
-            self.cam.release()
-            cv2.destroyAllWindows()
+            self.out = True
+            #self.cam.release()
+            #cv2.destroyAllWindows()
         elif k % 256 == 32:  # Space
-            img_name = "opencv_frame_{}.png".format(img_counter)
+            img_name = "opencv_frame_{}.png".format(self.img_counter)
             cv2.imwrite(img_name, frame)
             print(f"{img_name} written!\nPress g to grayscale, resize and rotate a written image!")
-            img_counter += 1
+            self.img_counter += 1
         elif k % 256 == ord('g'):  # Editing a chosen image
             # Reading Image and converting to grayscale
             img = input("In integer, which picture would you like to make grayscale?")
@@ -44,6 +47,8 @@ class Camera():
 
         elif k % 256 == ord('x'):  # Change to grayscale
             cv2.destroyAllWindows()
+
+        return self.out
 
     def close(self):
         self.cam.release()
