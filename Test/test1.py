@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
-from time import sleep
-import pygame, os, time
+import numpy as np
+import pygame
 import cv2
 from _XiaoRGEEK_SERVO_ import XR_Servo
 

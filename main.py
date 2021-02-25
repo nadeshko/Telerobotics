@@ -38,7 +38,7 @@ S4 = 0
 S7 = 0
 S8 = 90
 img_counter = 0
-edit_img_clear = False
+edit_img_clear = True
 Servo.XiaoRGEEK_SetServoAngle(1,S1)
 Servo.XiaoRGEEK_SetServoAngle(2,S2)
 Servo.XiaoRGEEK_SetServoAngle(3,S3)
@@ -204,10 +204,12 @@ if __name__ == '__main__':
             print("quitting...")
             break
         elif k == 32:  # Space
-            if edit_img_clear == False:
+            if edit_img_clear == True:
                 print('Press g to make an image grayscale!')
-                print('Press q to close window!\n\n')
-                edit_img_clear = True
+                print('Press s resize an image!')
+                print('Press r rotate an image!')
+                print('Press q to close windows!\n\n')
+                edit_img_clear = False
             img_name = "frame_{}.png".format(img_counter)
             cv2.imwrite(img_name, frame)
             print("{} written!".format(img_name))
@@ -215,34 +217,42 @@ if __name__ == '__main__':
         elif k == ord('g'): # Grayscale
             img = input("In integer, which picture would you like to make grayscale?")
             gray_img = cv2.imread(f"frame_{img}.png", 0)
-            print(f"Changing frame_{img}.png to grayscale!")
-            cv2.imshow("Grayscale Image",gray_img)
-            if k == ord('q'):
-                cv2.destroyAllWindows()
-            else: cv2.waitKey(0)
+            if gray_img is not None:
+                print(f"Changing frame_{img}.png to grayscale!")
+                cv2.imshow("Grayscale Image",gray_img)
+                if k == ord('q'):
+                    cv2.destroyAllWindows()
+                else: cv2.waitKey(0)
+            else: print('image couldnt be read')
         elif k == ord('s'): # Resize
             img = input("In integer, which picture would you like to resize?")
             to_resize = cv2.imread(f"frame_{img}.png")
-            y = int(input("How tall?"))
-            x = int(input("How long horizontally?"))
-            print(f"resizing frame_{img}.png to [{x},{y}]")
-            resized_img = cv2.resize(to_resize, (x,y))
-            cv2.imshow("Resized Image", resized_img)
-            if k == ord('q'):
-                cv2.destroyAllWindows()
+            if to_resize is not None:
+                y = int(input("How tall?"))
+                x = int(input("How long horizontally?"))
+                print(f"resizing frame_{img}.png to [{x},{y}]")
+                resized_img = cv2.resize(to_resize, (x,y))
+                cv2.imshow("Resized Image", resized_img)
+                if k == ord('q'):
+                    cv2.destroyAllWindows()
+                else:
+                    cv2.waitKey(0)
             else:
-                cv2.waitKey(0)
+                print('image couldnt be read')
         elif k == ord('r'): # Rotate
             img = input("In integer, which picture would you like to rotate?")
             to_rotate = cv2.imread(f"frame_{img}.png")
-            rotate = input("Turning clockwise, how much degree do you want it to turn? (90, 180, 270)")
-            attr = getattr(cv2, f"ROTATE_{rotate}_CLOCKWISE")
-            rotated_img = cv2.rotate(to_rotate, cv2.attr)
-            cv2.imshow("Rotated Image", rotated_img)
-            if k == ord('q'):
-                cv2.destroyAllWindows()
+            if to_rotate is not None:
+                rotate = input("Turning clockwise, how much degree do you want it to turn? (90, 180, 270)")
+                attr = getattr(cv2, f"ROTATE_{rotate}_CLOCKWISE")
+                rotated_img = cv2.rotate(to_rotate, cv2.attr)
+                cv2.imshow("Rotated Image", rotated_img)
+                if k == ord('q'):
+                    cv2.destroyAllWindows()
+                else:
+                    cv2.waitKey(0)
             else:
-                cv2.waitKey(0)
+                print('image couldnt be read')
 
         # Keyboard inputs
         if getKey('w'):
