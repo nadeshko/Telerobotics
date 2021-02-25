@@ -200,16 +200,14 @@ if __name__ == '__main__':
             cv2.imwrite(img_name, frame)
             print("{} written!".format(img_name))
             img_counter += 1
+        elif k == ord('q'):
+            cv2.destroyAllWindows()
         elif k == ord('g'):  # Grayscale
             img = input("In integer, which picture would you like to make grayscale?")
             gray_img = cv2.imread(f"frame_{img}.png", 0)
             if gray_img is not None:
                 print(f"Changing frame_{img}.png to grayscale!")
                 cv2.imshow("Grayscale Image", gray_img)
-                if k == ord('q'):
-                    cv2.destroyAllWindows()
-                else:
-                    cv2.waitKey(0)
             else:
                 print('image couldnt be read')
         elif k == ord('s'):  # Resize
@@ -221,10 +219,7 @@ if __name__ == '__main__':
                 print(f"resizing frame_{img}.png to [{x},{y}]")
                 resized_img = cv2.resize(to_resize, (x, y))
                 cv2.imshow("Resized Image", resized_img)
-                if k == ord('q'):
-                    cv2.destroyAllWindows()
-                else:
-                    cv2.waitKey(0)
+                
             else:
                 print('image couldnt be read')
         elif k == ord('r'):  # Rotate
@@ -232,13 +227,9 @@ if __name__ == '__main__':
             to_rotate = cv2.imread(f"frame_{img}.png")
             if to_rotate is not None:
                 rotate = input("Turning clockwise, how much degree do you want it to turn? (90, 180, 270)")
-                attr = getattr(cv2, f"ROTATE_{rotate}_CLOCKWISE")
-                rotated_img = cv2.rotate(to_rotate, cv2.attr)
+                rotation = getattr(cv2, f"ROTATE_{rotate}_CLOCKWISE")
+                rotated_img = cv2.rotate(to_rotate, rotation)
                 cv2.imshow("Rotated Image", rotated_img)
-                if k == ord('q'):
-                    cv2.destroyAllWindows()
-                else:
-                    cv2.waitKey(0)
             else:
                 print('image couldnt be read')
 
