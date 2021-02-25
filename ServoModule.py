@@ -9,6 +9,9 @@ Servo = XR_Servo()
 
 class Servo_control():
     def __init__(self, S1, S2, S3, S4, S7, S8):
+        '''
+        Servo Setup and initial angles
+        '''
         self.S1 = S1
         self.S2 = S2
         self.S3 = S3
@@ -95,8 +98,8 @@ class Servo_control():
                 self.S7 += 5
             Servo.XiaoRGEEK_SetServoAngle(servo, self.S7)
         elif servo == 8:
-            if self.S8 >= 90:
-                self.S8 = 90
+            if self.S8 >= 180:
+                self.S8 = 180
             else:
                 self.S8 += 5
             Servo.XiaoRGEEK_SetServoAngle(servo, self.S8)

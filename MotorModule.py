@@ -10,6 +10,9 @@ GPIO.setwarnings(False)
 
 class Motor_Control():
     def __init__(self, ENA, ENB, IN1, IN2, IN3, IN4):
+        '''
+        Motor setup and port definitions
+        '''
         self.ENA = ENA
         self.ENB = ENB
         self.IN1 = IN1

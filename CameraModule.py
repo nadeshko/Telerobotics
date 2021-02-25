@@ -15,6 +15,9 @@ class Camera():
         print("Starting Camera")
 
     def open(self):
+        '''
+        Shows camera window and allows user key input
+        '''
         ret, frame = self.cam.read()
         cv2.imshow('Camera', frame)
 
@@ -51,5 +54,8 @@ class Camera():
         return self.out
 
     def close(self):
+        '''
+        Closes the camera and destroys all window
+        '''
         self.cam.release()
         cv2.destroyAllWindows()

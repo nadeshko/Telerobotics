@@ -86,6 +86,7 @@ def main():
     elif Kp.getKey('LEFT'):
         servo.up(8)
 
+    # Escape to quit camera and stop execution
     elif Kp.getKey('ESCAPE') or out == True:
         print("quitting...")
         camera.close()
