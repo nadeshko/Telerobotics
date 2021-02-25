@@ -179,20 +179,6 @@ def up(servo):
             S8 = 180
         Servo.XiaoRGEEK_SetServoAngle(servo, S8)
 
-# key press
-def getKey(key):
-    """
-    Detects keyboard input, returns True if keyboard is pressed
-    """
-    # Pressed = False
-    for event in pygame.event.get(): pass
-    keyPress = pygame.key.get_pressed()
-    keyName = getattr(pygame, 'K_{}'.format(key))
-    if keyPress[keyName]:
-        Pressed = True
-    pygame.display.update()
-    #return Pressed
-
 if __name__ == '__main__':
     while True:
 
@@ -245,69 +231,72 @@ if __name__ == '__main__':
                 cv2.waitKey(0)
 
         # Keyboard inputs
-        if getKey('w'):
-            Forward(Speed)
-            print('Moving Forward')
-        elif getKey('s'):
-            Backward(Speed)
-            print('Moving backwards')
-        elif getKey('a'):
-            Left(Speed)
-            print('Turning left')
-        elif getKey('d'):
-            Right(Speed)
-            print('Turning right')
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                # Robot Movements
+                if event.key == pygame.K_w:
+                    Forward(Speed)
+                    print('Moving Forward')
+                elif event.key == pygame.K_s:
+                    Backward(Speed)
+                    print('Moving backwards')
+                elif event.key == pygame.K_a:
+                    Left(Speed)
+                    print('Turning left')
+                elif event.key == pygame.K_d:
+                    Right(Speed)
+                    print('Turning right')
 
-        # Robot acceleration/decceleration
-        elif getKey('LSHIFT'):
-            if Speed >= 1:
-                Speed = 1
-            else:
-                Speed += 0.1
-                print(Speed)
-        elif getKey('LCTRL'):
-            if Speed <= 0:
-                Speed = 0
-            else:
-                Speed -= 0.1
-                print(Speed)
+                # Robot acceleration/decceleration
+                elif event.key == pygame.K_LSHIFT:
+                    if Speed >= 1:
+                        Speed = 1
+                    else:
+                        Speed += 0.1
+                        print(Speed)
+                elif event.key == pygame.K_LCTRL:
+                    if Speed <= 0:
+                        Speed = 0
+                    else:
+                        Speed -= 0.1
+                        print(Speed)
 
-        # Servo 1 Control
-        elif getKey('KP4'):
-            down(1)
-        elif getKey('KP7'):
-            up(1)
-        # Servo 2 Control
-        elif getKey('KP9'):
-            down(2)
-        elif getKey('KP6'):
-            up(2)
-        # Servo 3 Control
-        elif getKey('KP1'):
-            down(3)
-        elif getKey('KP3'):
-            up(3)
-        # Servo 4 Control
-        elif getKey('KP_MINUS'):
-            down(4)
-        elif getKey('KP_PLUS'):
-            up(4)
-        # Servo 7 Control
-        elif getKey('UP'):
-            down(7)
-        elif getKey('DOWN'):
-            up(7)
-        # Servo 8 Control
-        elif getKey('RIGHT'):
-            down(8)
-        elif getKey('LEFT'):
-            up(8)
+                # Servo 1 Control
+                elif event.key == pygame.K_KP4:
+                    down(1)
+                elif event.key == pygame.K_KP7:
+                    up(1)
+                # Servo 2 Control
+                elif event.key == pygame.K_KP9:
+                    down(2)
+                elif event.key == pygame.K_KP6:
+                    up(2)
+                # Servo 3 Control
+                elif event.key == pygame.K_KP1:
+                    down(3)
+                elif event.key == pygame.K_KP3:
+                    up(3)
+                # Servo 4 Control
+                elif event.key == pygame.K_MINUS:
+                    down(4)
+                elif event.key == pygame.K_PLUS:
+                    up(4)
+                # Servo 7 Control
+                elif event.key == pygame.K_UP:
+                    down(7)
+                elif event.key == pygame.K_DOWN:
+                    up(7)
+                # Servo 8 Control
+                elif event.key == pygame.K_RIGHT:
+                    down(8)
+                elif event.key == pygame.K_LEFT:
+                    up(8)
 
-        elif getKey('ESCAPE'):
-            print("quitting...")
-            break
-
-        else: Stop()
+                elif event.key == pygame.K_ESCAPE:
+                    print("quitting...")
+                    break
+            elif event.type == pygame.KEYUP:
+                Stop()
 
 cam.release()
 cv2.destroyAllWindows()
