@@ -10,7 +10,7 @@ class KeyPress():
         Initialize pygame and opens window
         """
         pygame.init()
-        win = pygame.display.set_mode((200, 200))
+        screen = pygame.display.set_mode((400, 200))
 
     def getKey(self, key):
         """
@@ -24,26 +24,3 @@ class KeyPress():
             Pressed = True
         pygame.display.update()
         return Pressed
-
-'''
-def init():
-    pygame.init()
-    win = pygame.display.set_mode((200,200))
-
-def getKey(key):
-    Pressed = False
-    for event in pygame.event.get(): pass
-    keyPress = pygame.key.get_pressed()
-    keyName = getattr(pygame,'K_{}'.format(key))
-    if keyPress[keyName]:
-        Pressed = True
-    pygame.display.update()
-    return Pressed
-
-def main():
-    pass
-
-if __name__ == '__main__':
-    init()
-    while True:
-        main()'''
