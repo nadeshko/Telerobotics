@@ -1,5 +1,4 @@
 import RPi.GPIO as GPIO
-import numpy as np
 import pygame
 import cv2
 from _XiaoRGEEK_SERVO_ import XR_Servo
@@ -191,10 +190,10 @@ if __name__ == '__main__':
             break
         elif k == 32:  # Space
             if edit_img_clear == True:
-                print('Press g to make an image grayscale!')
+                print('\nPress g to make an image grayscale!')
                 print('Press s resize an image!')
                 print('Press r rotate an image!')
-                print('Press q to close windows!\n\n')
+                print('Press q to close windows!\n')
                 edit_img_clear = False
             img_name = "frame_{}.png".format(img_counter)
             cv2.imwrite(img_name, frame)
@@ -208,8 +207,10 @@ if __name__ == '__main__':
             if gray_img is not None:
                 print(f"Changing frame_{img}.png to grayscale!")
                 cv2.imshow("Grayscale Image", gray_img)
+                cv2.waitKey(0)
+                cv2.destroyWindow("Grayscale Image")
             else:
-                print('image couldnt be read')
+                print('image couldnt be read! try again')
         elif k == ord('s'):  # Resize
             img = input("In integer, which picture would you like to resize?")
             to_resize = cv2.imread(f"frame_{img}.png")
@@ -219,9 +220,10 @@ if __name__ == '__main__':
                 print(f"resizing frame_{img}.png to [{x},{y}]")
                 resized_img = cv2.resize(to_resize, (x, y))
                 cv2.imshow("Resized Image", resized_img)
-                
+                cv2.waitKey(0)
+                cv2.destroyWindow("Resized Image")
             else:
-                print('image couldnt be read')
+                print('image couldnt be read! try again')
         elif k == ord('r'):  # Rotate
             img = input("In integer, which picture would you like to rotate?")
             to_rotate = cv2.imread(f"frame_{img}.png")
@@ -230,8 +232,10 @@ if __name__ == '__main__':
                 rotation = getattr(cv2, f"ROTATE_{rotate}_CLOCKWISE")
                 rotated_img = cv2.rotate(to_rotate, rotation)
                 cv2.imshow("Rotated Image", rotated_img)
+                cv2.waitKey(0)
+                cv2.destroyWindow("Rotated Image")
             else:
-                print('image couldnt be read')
+                print('image couldnt be read! try again')
 
         # Keyboard inputs
         for event in pygame.event.get():
