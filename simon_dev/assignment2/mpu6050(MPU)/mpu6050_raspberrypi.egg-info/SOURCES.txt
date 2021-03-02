@@ -1,0 +1,10 @@
+README.rst
+setup.py
+bin/mpu6050-example
+mpu6050/__init__.py
+mpu6050/mpu6050.py
+mpu6050_raspberrypi.egg-info/PKG-INFO
+mpu6050_raspberrypi.egg-info/SOURCES.txt
+mpu6050_raspberrypi.egg-info/dependency_links.txt
+mpu6050_raspberrypi.egg-info/not-zip-safe
+mpu6050_raspberrypi.egg-info/top_level.txt

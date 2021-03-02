@@ -1,0 +1,10 @@
+README.md
+setup.py
+mpu9250_jmdev/__init__.py
+mpu9250_jmdev/fake_smbus.py
+mpu9250_jmdev/mpu_9250.py
+mpu9250_jmdev/registers.py
+mpu9250_jmdev.egg-info/PKG-INFO
+mpu9250_jmdev.egg-info/SOURCES.txt
+mpu9250_jmdev.egg-info/dependency_links.txt
+mpu9250_jmdev.egg-info/top_level.txt
