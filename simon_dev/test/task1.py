@@ -5,8 +5,6 @@ import numpy as np
 # Create a black image (size:512*512)
 img = np.zeros((512,512,3),np.uint8)
 
-
-
 # Draw a rectangle (Green,thickness:3 px)
 # cv2.rectangle(img,(384,0),(510,128),(0,255,0),3)
 
