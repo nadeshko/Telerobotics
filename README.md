@@ -15,6 +15,10 @@ The code was written with Python 3.9.2.
 
 [Xming](https://sourceforge.net/projects/xming/) is required to display the pygame window through PuTTy.
 
+## Related Projects
+[MPU9250-Python](https://github.com/FaBoPlatform/FaBo9AXIS-MPU9250-Python)  
+[hcsr04sensor](https://github.com/alaudet/hcsr04sensor/)  
+
 ## Executing Code
 RobotMain is the main code of this program
 
