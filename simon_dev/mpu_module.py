@@ -1,5 +1,4 @@
 import FaBo9Axis_MPU9250
-from time import sleep
 
 class mpu():
     def __init__(self):
@@ -24,12 +23,6 @@ class mpu():
         print(" my = " , ( self.mag['y'] ))
         print(" mz = " , ( self.mag['z'] ))
 
-        a_x = self.accel['x']
-        a_y = self.accel['y']
-
-        x = 256 + 256 * a_x
-        y = 256 + 256 * a_y
-
-        sleep(0.5)
-
+        x = round(256 + 256 * self.accel['x'])
+        y = round(256 + 256 * self.accel['y'])
         return x,y
