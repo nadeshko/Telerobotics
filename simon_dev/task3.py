@@ -1,6 +1,4 @@
-import matplotlib.pylot as plt
-import numpy as np
-import pandas as pd
+import matplotlib.pyplot as plt
 
 class Plot():
 
@@ -14,10 +12,10 @@ class Plot():
  plt.plot(x,y)
 
  # naming the x axis
- plt.xlabel(m_x)
+ plt.xlabel('m_x')
 
  # naming the y axis
- plt.ylabel(m_y)
+ plt.ylabel('m_y')
 
  # giving a title to my graph
  plt.title('All Recorded Data')

@@ -34,7 +34,7 @@ try:
         print(" mz = " , ( mag['z'] ))
         print()
 
-        time.sleep(1)
+        time.sleep(0.5)
 
 except KeyboardInterrupt:
     sys.exit()
