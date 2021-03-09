@@ -16,6 +16,9 @@ class mpu():
     def read_accel(self, Read):
         while Read == True:
             self.accel = self.mpu9250.readAccel()
+            print(" ax = ", (self.accel['x']))
+            print(" ay = ", (self.accel['y']))
+            print(" az = ", (self.accel['z']))
             x = round(256 + (256 * self.accel['x']))
             y = round(256 - (256 * self.accel['y']))
             sleep(1)
@@ -113,11 +116,6 @@ class mpu():
         avg_my_list = [avg_myN, avg_myE, avg_myS, avg_myW]
         avg_mx = np.asarray(avg_mx_list)
         avg_my = np.asarray(avg_my_list)
-
-       
-        print(" ax = " , ( self.accel['x'] ))
-        print(" ay = " , ( self.accel['y'] ))
-        print(" az = " , ( self.accel['z'] ))
 
         print(" gx = " , ( self.gyro['x'] ))
         print(" gy = " , ( self.gyro['y'] ))
