@@ -13,15 +13,14 @@ class mpu():
         self.avg_mx = []
         self.avg_my = []
 
-    def read_accel(self, Read):
-        while Read == True:
-            self.accel = self.mpu9250.readAccel()
-            print(" ax = ", (self.accel['x']))
-            print(" ay = ", (self.accel['y']))
-            print(" az = ", (self.accel['z']))
-            x = round(256 + (256 * self.accel['x']))
-            y = round(256 - (256 * self.accel['y']))
-            sleep(1)
+    def read_accel(self):
+        self.accel = self.mpu9250.readAccel()
+        print(" ax = ", (self.accel['x']))
+        print(" ay = ", (self.accel['y']))
+        print(" az = ", (self.accel['z']))
+        x = round(256 + (256 * self.accel['x']))
+        y = round(256 - (256 * self.accel['y']))
+        sleep(1)
 
         return x, y
 

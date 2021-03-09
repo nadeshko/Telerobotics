@@ -7,9 +7,7 @@ mpu9250 = mpu()
 OpenCV = openCV()
 
 def main():
-        Read_accel = True
-
-        [x ,y] = mpu9250.read_accel(Read_accel)
+        [x ,y] = mpu9250.read_accel()
         OpenCV.Update(x, y)
 
         [mx, my, avg_mx, avg_my] = mpu9250.read_mag()
