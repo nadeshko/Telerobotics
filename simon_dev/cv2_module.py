@@ -17,6 +17,7 @@ class openCV():
         cv2.circle(self.img, (x,y), 28, (0, 255, 255), -1)
         cv2.imshow(self.winName, self.img)
         cv2.waitKey(500)
+        cv2.destroyAllWindows()
 
 
 
