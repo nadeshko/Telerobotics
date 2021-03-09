@@ -12,20 +12,17 @@ class mpu():
         self.my = []
         self.avg_mx = []
         self.avg_my = []
-        '''
-        self.mx_N = []
-        self.my_N = []
-        self.mx_E = []
-        self.my_E = []
-        self.mx_S = []
-        self.my_S = []
-        self.mx_W = []
-        self.my_W = []'''
 
-    def read_mpu(self):
-        self.accel = self.mpu9250.readAccel()
-        self.gyro = self.mpu9250.readGyro()
+    def read_accel(self, Read):
+        while Read == True:
+            self.accel = self.mpu9250.readAccel()
+            x = round(256 + (256 * self.accel['x']))
+            y = round(256 - (256 * self.accel['y']))
+            sleep(1)
 
+        return x, y
+
+    def read_mag(self):
         for i in range (0,200):
             self.mag = self.mpu9250.readMagnet()
             self.mx.append(self.mag['x'])
@@ -33,15 +30,32 @@ class mpu():
             print(i)
             sleep(0.25)
             i += 1
-            if i > 4:
-                self.avg_mx.append((self.mx[i-5] + self.mx[i - 1] + self.mx[i - 2] + self.mx[i - 3] + self.mx[i - 4])/ 5)
-                self.avg_my.append((self.my[i-5] + self.my[i - 1] + self.my[i - 2] + self.my[i - 3] + self.my[i - 4])/ 5)
+
+        for i in range (2,4,198):
+            self.avg_mx.append((self.mx[i - 2] + self.mx[i - 1] + self.mx[i] + self.mx[i + 1] + self.mx[i + 2])/ 5)
+            self.avg_my.append((self.my[i - 2] + self.my[i - 1] + self.my[i] + self.my[i + 1] + self.my[i + 2])/ 5)
 
         mx = np.asarray(self.mx)
         my = np.asarray(self.my)
         avg_mx = np.asarray(self.avg_mx)
         avg_my = np.asarray(self.avg_my)
-        '''
+
+        return mx, my, avg_mx, avg_my
+
+    def read_gyro(self):
+        self.gyro = self.mpu9250.readGyro()
+
+
+
+'''
+        self.mx_N = []
+        self.my_N = []
+        self.mx_E = []
+        self.my_E = []
+        self.mx_S = []
+        self.my_S = []
+        self.mx_W = []
+        self.my_W = []
         for i in range (0,50):
             self.mag = self.mpu9250.readMagnet()
             self.mx_N.append(self.mag['x'])
@@ -98,9 +112,9 @@ class mpu():
         avg_mx_list = [avg_mxN, avg_mxE, avg_mxS, avg_mxW]
         avg_my_list = [avg_myN, avg_myE, avg_myS, avg_myW]
         avg_mx = np.asarray(avg_mx_list)
-        avg_my = np.asarray(avg_my_list)'''
+        avg_my = np.asarray(avg_my_list)
 
-        '''
+       
         print(" ax = " , ( self.accel['x'] ))
         print(" ay = " , ( self.accel['y'] ))
         print(" az = " , ( self.accel['z'] ))
@@ -113,15 +127,5 @@ class mpu():
         print(" my = " , ( self.mag['y'] ))
         #print(" mz = " , ( self.mag['z'] ))'''
 
-        a_x = self.accel['x']
-        a_y = self.accel['y']
 
-        x1 = 256 + 256 * a_x
-        y1 = 256 - 256 * a_y
-        
-        x = round(x1)
-        y = round(y1)
 
-        #sleep(0.5)
-
-        return x,y,mx,my, avg_mx, avg_my

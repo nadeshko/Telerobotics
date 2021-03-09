@@ -1,4 +1,3 @@
-
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -24,9 +23,7 @@ class plot():
 
   normalized_mx = (avg_mx - np.min(avg_mx))/(np.max(avg_mx)-np.min(avg_mx))
   normalized_my = (avg_my - np.min(avg_my)) / (np.max(avg_my) - np.min(avg_my))
-  '''
-  normalized_mx = preprocessing.normalize(avg_mx)
-  normalized_my = preprocessing.normalize(avg_my)'''
+  
   plot3 = plt.figure(3)
   plt.plot(normalized_mx, normalized_my, 'o', color='blue')
   plt.xlabel('mx')
