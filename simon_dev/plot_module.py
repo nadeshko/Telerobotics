@@ -5,7 +5,7 @@ class plot():
     def __init__(self):
         pass
 
-    def calibrate(self, mx, my, avg_mx, avg_my)
+    def calibrate(self, mx, my, avg_mx, avg_my):
         rec_win = plt.figure(1)
         rec_win.winName('Recorded Data')
         # x-axis value
@@ -25,6 +25,10 @@ class plot():
         plt.ylabel('my')
         plt.title('Averaged Data')
 
+        # Printing values to normalize values for [-1, 1]
+        print(f"min-mx:{min(avg_mx)}, max-mx:{max(avg_mx)}")
+        print(f"min-my:{min(avg_my)}, max-my:{max(avg_my)}")
+
         normalized_mx = 2*((avg_mx - np.min(avg_mx)) / (np.max(avg_mx) - np.min(avg_mx))) - 1
         normalized_my = 2*((avg_my - np.min(avg_my)) / (np.max(avg_my) - np.min(avg_my))) - 1
 
@@ -36,11 +40,3 @@ class plot():
         plt.title('Calibrated Data')
 
         plt.show()
-
-        #### DEBUG ####
-        angle = normalized_mx - normalized_my
-
-        return angle
-
-
-
