@@ -1,8 +1,15 @@
 import cv2
+import imutils
+import argparse
 import numpy as np
 
 class openCV():
-    def __init__(self, x, y):
+    def __init__(self):
+        ap = argparse.ArgumentParser()
+        ap.add_argument("-i", "--image", required=True, help="path to the image file")
+        self.args = vars(ap.parse_args())
+
+    def Elec_lvl(self, x, y):
         # Create a black image (size:512*512)
         self.img = np.zeros((512, 512, 3), np.uint8)
         # Draw two digital blue lines
@@ -15,12 +22,15 @@ class openCV():
         cv2.imshow(self.winName, self.img)
         cv2.namedWindow(self.winName)
 
-        k = cv2.waitKey(1) % 256
-        if k == ord('q'):
-            cv2.destroyAllWindows()
+        cv2.waitKey(500)
 
-    def Destroy(self):
-        pass
+    def Elec_compass(self, angle):
+        # Load image from file
+        img = cv2.imread(self.args["Compass.png"])
+        rotated = imutils.rotate_bound(img, angle)
+        cv2.imshow("Electronic Compass", rotated)
+        cv2.waitKey(0)
+
 
 
 
