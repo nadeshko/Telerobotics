@@ -4,6 +4,9 @@ from MpuModule import mpu
 Mpu = mpu(0,0,0,0)
 
 def main():
+    '''
+    Takes MPU data and displays real-time tracking
+    '''
     [ax,ay,angle] = Mpu.read_mpu()
 
 if __name__ == '__main__':

@@ -4,6 +4,9 @@ import numpy as np
 
 class mpu():
     def __init__(self, min_mx, max_mx, min_my, max_my):
+        '''
+        Calls MPU9250 module
+        '''
         self.mpu9250 = FaBo9Axis_MPU9250.MPU9250()
         self.min_mx = min_mx
         self.max_mx = max_mx
@@ -11,6 +14,9 @@ class mpu():
         self.max_my = max_my
 
     def read_mpu(self):
+        '''
+        Returns MPU data every 0.25 sec
+        '''
         accel = self.mpu9250.readAccel()
         ax = round(256 + (256 * accel['x']))
         ay = round(256 - (256 * accel['y']))
