@@ -19,17 +19,15 @@ class mpu():
         mx = 2 * ((mag['x'] - self.min_mx) / (self.max_mx - self.min_mx)) - 1
         my = 2 * ((mag['y'] - self.min_my) / (self.max_my - self.min_my)) - 1
 
-        angle = np.rad2deg(np.arctan(mx / my))
+        #angle = np.rad2deg(np.arctan(mx / my))
 
-        ''' 
         if mx > 0 and my > 0:
-            angle = np.rad2deg(np.arctan(my / mx))
-        elif mx > 0 and my < 0:
-            angle = np.rad2deg(np.arctan(my / mx)) + 90
-        elif mx < 0 and my < 0:
+            angle = np.rad2deg(np.arctan(mx / my))
+        elif my < 0:
             angle = np.rad2deg(np.arctan(mx / my)) + 180
         elif mx < 0 and my > 0:
-            angle = 360 - np.rad2deg(np.arctan(mx / my))'''
+            angle = np.rad2deg(np.arctan(mx / my)) + 360
+
         print(angle)
         sleep(0.25)
 
