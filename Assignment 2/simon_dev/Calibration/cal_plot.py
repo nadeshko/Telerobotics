@@ -21,6 +21,10 @@ class plot():
         plt.xlabel('mx')
         plt.ylabel('my')
         plt.title('Averaged Data')
+        print(np.min(avg_mx))
+        print(np.max(avg_mx))
+        print(np.min(avg_my))
+        print(np.max(avg_my))
 
         # Printing values to normalize values for [-1, 1]
         print(f"min-mx:{min(avg_mx)}\nmax-mx:{max(avg_mx)}")

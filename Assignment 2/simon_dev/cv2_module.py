@@ -6,7 +6,7 @@ import numpy as np
 class openCV():
     def __init__(self):
         ap = argparse.ArgumentParser()
-        ap.add_argument("-i", "--image", required=True, help="path to the image file")
+        ap.add_argument("-i", "--image", required=True, help="/home/pi/work/wifirobots/python_src/tracking_sensor_MPU/example/compass1.png")
         self.args = vars(ap.parse_args())
 
     def Elec_lvl(self, x, y):
