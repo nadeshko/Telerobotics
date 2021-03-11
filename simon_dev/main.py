@@ -10,8 +10,10 @@ def main():
         #[x ,y] = mpu9250.read_accel()
         #OpenCV.Elec_lvl(x, y)
 
+        #mpu9250.read_mag()
+
         [mx, my, avg_mx, avg_my] = mpu9250.read_mag()
-        plot.calibrate(mx,my,avg_mx,avg_my)
+        plot(mx,my,avg_mx,avg_my)
         #OpenCV.Elec_compass(angle)
 
 if __name__ == '__main__':

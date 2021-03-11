@@ -25,17 +25,36 @@ class mpu():
         return x, y
 
     def read_mag(self):
+        '''
+        self.mag = self.mpu9250.readMagnet()
+        mx = 2 * ((self.mag['x'] + 6.0938) / (18.962 + 6.2938)) - 1
+        my = 2 * ((self.mag['y'] + 43.9458) / (-19.6428 + 43.9458)) - 1
+
+        #print(mx, my)
+        #angle = np.rad2deg(np.arctan(mx / my)) - 20
+
+
+        if mx > 0 and my > 0:
+            angle = np.rad2deg(np.arctan(my/ mx))
+        #elif mx > 0 and my < 0:
+            #angle = np.rad2deg(np.arctan(my / mx)) + 90
+        #elif mx < 0 and my < 0:
+            #angle = np.rad2deg(np.arctan(mx / my)) + 180
+        #elif mx < 0 and my > 0:
+            #angle = 360 - np.rad2deg(np.arctan(mx / my))
+        print(angle)'''
+
 
         for i in range (0,200):
             self.mag = self.mpu9250.readMagnet()
             self.mx.append(self.mag['x'])
             self.my.append(self.mag['y'])
-            if i%3 == 0 and i > 3:
+            if i > 3:
                 self.avg_mx.append((self.mx[i] + self.mx[i - 1] + self.mx[i-2] + self.mx[i-3] + self.mx[i-4]) / 5)
                 self.avg_my.append((self.my[i] + self.my[i - 1] + self.my[i-2] + self.my[i-3] + self.my[i-4]) / 5)
             print(i)
             i += 1
-            sleep(0.25)
+            sleep(0.15)
 
         mx = np.asarray(self.mx)
         my = np.asarray(self.my)
@@ -43,6 +62,7 @@ class mpu():
         avg_my = np.asarray(self.avg_my)
 
         return mx, my, avg_mx, avg_my
+
 
     def read_gyro(self):
         self.gyro = self.mpu9250.readGyro()
