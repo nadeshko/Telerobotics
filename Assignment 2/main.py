@@ -1,7 +1,7 @@
 import sys
 from MpuModule import mpu
 # DEBUG
-Mpu = mpu("min_mx, max_mx, min_my, max_my")
+Mpu = mpu(0,0,0,0)
 
 def main():
     [ax,ay,angle] = Mpu.read_mpu()
