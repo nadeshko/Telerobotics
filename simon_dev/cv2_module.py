@@ -22,7 +22,7 @@ class openCV():
         cv2.imshow(self.winName, self.img)
         cv2.namedWindow(self.winName)
 
-        cv2.waitKey(500)
+        cv2.waitKey(250)
 
     def Elec_compass(self, angle):
         # Load image from file

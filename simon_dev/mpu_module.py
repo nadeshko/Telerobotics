@@ -3,46 +3,34 @@ from time import sleep
 import numpy as np
 
 class mpu():
-    def __init__(self):
+    def __init__(self, min_mx, max_mx, min_my, max_my):
         self.mpu9250 = FaBo9Axis_MPU9250.MPU9250()
-        self.accel = 0
-        self.gyro = 0
-        self.mag = 0
-        self.mx = []
-        self.my = []
-        self.avg_mx = []
-        self.avg_my = []
+        self.min_mx = min_mx
+        self.max_mx = max_mx
+        self.min_my = min_my
+        self.max_my = max_my
 
-    def read_accel(self):
-        self.accel = self.mpu9250.readAccel()
-        print(" ax = ", (self.accel['x']))
-        print(" ay = ", (self.accel['y']))
-        print(" az = ", (self.accel['z']))
-        x = round(256 + (256 * self.accel['x']))
-        y = round(256 - (256 * self.accel['y']))
-        sleep(0.5)
+    def read_mpu(self):
+        accel = self.mpu9250.readAccel()
+        ax = round(256 + (256 * accel['x']))
+        ay = round(256 - (256 * accel['y']))
 
-        return x, y
+        mag = self.mpu9250.readMagnet()
+        mx = 2 * ((mag['x'] - self.min_mx) / (self.max_mx - self.min_mx)) - 1
+        my = 2 * ((mag['y'] - self.min_my) / (self.max_my - self.min_my)) - 1
 
-    def read_mag(self):
-        '''
-        self.mag = self.mpu9250.readMagnet()
-        mx = 2 * ((self.mag['x'] + 6.0938) / (18.962 + 6.2938)) - 1
-        my = 2 * ((self.mag['y'] + 43.9458) / (-19.6428 + 43.9458)) - 1
+        angle = np.rad2deg(np.arctan(mx / my))
 
-        #print(mx, my)
-        #angle = np.rad2deg(np.arctan(mx / my)) - 20
-
-
+        ''' 
         if mx > 0 and my > 0:
-            angle = np.rad2deg(np.arctan(my/ mx))
-        #elif mx > 0 and my < 0:
-            #angle = np.rad2deg(np.arctan(my / mx)) + 90
-        #elif mx < 0 and my < 0:
-            #angle = np.rad2deg(np.arctan(mx / my)) + 180
-        #elif mx < 0 and my > 0:
-            #angle = 360 - np.rad2deg(np.arctan(mx / my))
-        print(angle)'''
+            angle = np.rad2deg(np.arctan(my / mx))
+        elif mx > 0 and my < 0:
+            angle = np.rad2deg(np.arctan(my / mx)) + 90
+        elif mx < 0 and my < 0:
+            angle = np.rad2deg(np.arctan(mx / my)) + 180
+        elif mx < 0 and my > 0:
+            angle = 360 - np.rad2deg(np.arctan(mx / my))'''
+        print(angle)
+        sleep(0.25)
 
-    def read_gyro(self):
-        self.gyro = self.mpu9250.readGyro()
+        return ax,ay,angle
