@@ -29,7 +29,7 @@ class openCV():
         img = cv2.imread(self.args["Compass.png"])
         rotated = imutils.rotate_bound(img, angle)
         cv2.imshow("Electronic Compass", rotated)
-        cv2.waitKey(0)
+        cv2.waitKey(250)
 
 
 
