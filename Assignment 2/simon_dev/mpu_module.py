@@ -27,6 +27,10 @@ class mpu():
             angle = np.rad2deg(np.arctan(mx / my)) + 180
         elif mx < 0 and my > 0:
             angle = np.rad2deg(np.arctan(mx / my)) + 360
+        elif mx == 1 and my == 0:
+            angle = 90
+        elif mx == -1 and my == 0:
+            angle = 270
 
         print(angle)
         sleep(0.25)
