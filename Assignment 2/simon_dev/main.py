@@ -1,5 +1,4 @@
 import sys
-import cv2
 from mpu_module import mpu
 from cv2_module import openCV
 
@@ -12,7 +11,6 @@ def main():
         [x ,y, angle] = Mpu.read_mpu()
         OpenCV.Elec_lvl(x, y)
         OpenCV.Elec_compass(angle)
-        cv2.waitKey(1)
 
         #imgStack = OpenCV.join(0.6,([compass,camera,level]))
         #cv2.imshow("Task 3", imgStack)

@@ -11,9 +11,9 @@ class openCV():
 
     def Camera(self):
         ret, frame = self.cam.read()
-        #return frame
         cv2.imshow('Camera', frame)
-        #cv2.waitKey(1)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            cv2.destroyAllWindows()
         
     def Elec_lvl(self, x, y):
         # Create a black image (size:512*512)
@@ -27,7 +27,7 @@ class openCV():
         winName = 'Electronic Level'
         cv2.imshow(winName, img)
         cv2.namedWindow(winName)
-        #cv2.waitKey(250)
+        cv2.waitKey(250)
         #return img
 
     def Elec_compass(self, angle):
@@ -36,9 +36,9 @@ class openCV():
         resize = cv2.resize(self.compass, (512,512))
         rotating = imutils.rotate(resize, -angle)
         cv2.imshow("Electronic Compass", rotating)
-        #cv2.waitKey(250)
+        cv2.waitKey(250)
         #return rotating
-
+    """ 
     def hor_stack(self, img1, img2, img3):
         horImg = np.hstack((img1, img2, img3))
         cv2.imshow("Horizontal", horImg)
@@ -75,7 +75,7 @@ class openCV():
                 if len(imgArray[x].shape) == 2: imgArray[x] = cv2.cvtColor(imgArray[x], cv2.COLOR_GRAY2BGR)
             hor = np.hstack(imgArray)
             ver = hor
-        return ver
+        return ver"""
 
     def close(self):
         '''
