@@ -37,6 +37,11 @@ class openCV():
         #cv2.waitKey(250)
         return rotating
 
+    def hor_stack(self, img1, img2, img3):
+        horImg = np.hstack((img1, img2, img3))
+        cv2.imshow("Horizontal", horImg)
+        cv2.waitKey(1)
+
     def join(self, scale, imgArray):
         rows = len(imgArray)
         cols = len(imgArray[0])

@@ -12,9 +12,12 @@ def main():
         [x ,y, angle] = Mpu.read_mpu()
         level = OpenCV.Elec_lvl(x, y)
         compass = OpenCV.Elec_compass(angle)
-        imgStack = OpenCV.join(0.6,([compass,camera,level]))
-        cv2.imshow("Task 3", imgStack)
-        cv2.waitKey(1)
+
+        #imgStack = OpenCV.join(0.6,([compass,camera,level]))
+        #cv2.imshow("Task 3", imgStack)
+        #cv2.waitKey(1)
+
+        OpenCV.hor_stack(compass, camera, level)
 
 if __name__ == '__main__':
     try:
