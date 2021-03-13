@@ -31,6 +31,5 @@ class mpu():
             angle = 270
 
         print(angle) # DEBUG
-        sleep(0.25)
 
         return ax,ay,angle
