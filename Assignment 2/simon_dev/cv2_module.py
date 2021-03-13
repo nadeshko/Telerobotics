@@ -13,8 +13,8 @@ class openCV():
 
     def Camera(self):
         ret, frame = self.cam.read()
-        return frame
-        #cv2.imshow('Camera', frame)
+        #return frame
+        cv2.imshow('Camera', frame)
         
     def Elec_lvl(self, x, y):
         # Create a black image (size:512*512)
@@ -26,19 +26,19 @@ class openCV():
         cv2.circle(img, (x, y), 28, (0, 255, 255), -1)
         # Show the result
         winName = 'Electronic Level'
-        #cv2.imshow(winName, img)
+        cv2.imshow(winName, img)
         cv2.namedWindow(winName)
-        #cv2.waitKey(250)
-        return img
+        cv2.waitKey(250)
+        #return img
 
     def Elec_compass(self, angle):
         # Load image from file
         self.compass= cv2.imread("compass4.png")
         resize = cv2.resize(self.compass, (512,512))
         rotating = imutils.rotate(resize, -angle)
-        #cv2.imshow("Electronic Compass", rotating)
-        #cv2.waitKey(250)
-        return rotating
+        cv2.imshow("Electronic Compass", rotating)
+        cv2.waitKey(250)
+        #return rotating
 
     def hor_stack(self, img1, img2, img3):
         horImg = np.hstack((img1, img2, img3))
