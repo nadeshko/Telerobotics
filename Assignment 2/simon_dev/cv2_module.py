@@ -7,13 +7,14 @@ class openCV():
         '''
         Initialize Camera
         '''
-        self.cam = cv2.VideoCapture(1)
+        pass
 
     def Camera(self):
         ret, frame = self.cam.read()
         cv2.imshow('Camera', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            cv2.destroyAllWindows()
+            out = True
+        return out
         
     def Elec_lvl(self, x, y):
         # Create a black image (size:512*512)
