@@ -7,15 +7,13 @@ class openCV():
         '''
         Initialize Camera
         '''
-        self.cam = cv2.VideoCapture(0)
-        self.cam.set(3, 640)
-        self.cam.set(4, 480)
+        self.cam = cv2.VideoCapture(1)
 
     def Camera(self):
         ret, frame = self.cam.read()
         #return frame
         cv2.imshow('Camera', frame)
-        cv2.waitKey(1)
+        #cv2.waitKey(1)
         
     def Elec_lvl(self, x, y):
         # Create a black image (size:512*512)
@@ -29,7 +27,7 @@ class openCV():
         winName = 'Electronic Level'
         cv2.imshow(winName, img)
         cv2.namedWindow(winName)
-        cv2.waitKey(250)
+        #cv2.waitKey(250)
         #return img
 
     def Elec_compass(self, angle):
@@ -38,7 +36,7 @@ class openCV():
         resize = cv2.resize(self.compass, (512,512))
         rotating = imutils.rotate(resize, -angle)
         cv2.imshow("Electronic Compass", rotating)
-        cv2.waitKey(250)
+        #cv2.waitKey(250)
         #return rotating
 
     def hor_stack(self, img1, img2, img3):
