@@ -15,6 +15,7 @@ class openCV():
         ret, frame = self.cam.read()
         #return frame
         cv2.imshow('Camera', frame)
+        cv2.waitKey(1)
         
     def Elec_lvl(self, x, y):
         # Create a black image (size:512*512)
