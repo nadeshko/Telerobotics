@@ -68,10 +68,7 @@ class openCV():
                 if len(imgArray[x].shape) == 2: imgArray[x] = cv2.cvtColor(imgArray[x], cv2.COLOR_GRAY2BGR)
             hor = np.hstack(imgArray)
             ver = hor
-
-        cv2.imshow("Task 3", ver)
-        cv2.waitKey(1)
-        #return ver
+        return ver
 
     def close(self):
         '''
