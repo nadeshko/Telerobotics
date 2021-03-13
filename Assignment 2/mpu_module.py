@@ -18,27 +18,25 @@ class mpu():
         Returns MPU data every 0.25 sec
         '''
         accel = self.mpu9250.readAccel()
-        ax = round(256 + (256 * accel['x']))
-        ay = round(256 - (256 * accel['y']))
+        ax = round(240 + (240 * accel['x']))
+        ay = round(240 - (240 * accel['y']))
 
         mag = self.mpu9250.readMagnet()
-        # Normalize to [-1,1]
         mx = 2 * ((mag['x'] - self.min_mx) / (self.max_mx - self.min_mx)) - 1
         my = 2 * ((mag['y'] - self.min_my) / (self.max_my - self.min_my)) - 1
 
-        angle = np.rad2deg(np.arctan(mx / my))
-
-        '''
         if mx > 0 and my > 0:
-            angle = np.rad2deg(np.arctan(my / mx))
-        elif mx > 0 and my < 0:
-            angle = np.rad2deg(np.arctan(my / mx)) + 90
-        elif mx < 0 and my < 0:
+            angle = np.rad2deg(np.arctan(mx / my))
+        elif my < 0:
             angle = np.rad2deg(np.arctan(mx / my)) + 180
         elif mx < 0 and my > 0:
-            angle = 360 - np.rad2deg(np.arctan(mx / my))'''
+            angle = np.rad2deg(np.arctan(mx / my)) + 360
+        elif mx == 1 and my == 0:
+            angle = 90
+        elif mx == -1 and my == 0:
+            angle = 270
 
-        print(angle)
-        sleep(0.25)
+        print(angle) # DEBUG
+        sleep (0.2)
 
         return ax,ay,angle
