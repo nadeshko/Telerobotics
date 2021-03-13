@@ -1,17 +1,18 @@
 import cv2
 import imutils
-import argparse
 import numpy as np
-from PIL import Image
 
 class openCV():
     def __init__(self):
-        ap = argparse.ArgumentParser()
-        ap.add_argument("-i", "--image", help="path to the image file")
-        args = vars(ap.parse_args())
-        # Load image from file
-        self.compass= cv2.imread("compass4.png")
-        #pass
+        '''
+        Initialize Camera
+        '''
+        self.cam = cv2.VideoCapture(0)
+
+    def Camera(self):
+        ret, frame = self.cam.read()
+        return frame
+        #cv2.imshow('Camera', frame)
         
     def Elec_lvl(self, x, y):
         # Create a black image (size:512*512)
@@ -23,32 +24,62 @@ class openCV():
         cv2.circle(img, (x, y), 28, (0, 255, 255), -1)
         # Show the result
         winName = 'Electronic Level'
-        cv2.imshow(winName, img)
+        #cv2.imshow(winName, img)
         cv2.namedWindow(winName)
-
-        cv2.waitKey(250)
+        #cv2.waitKey(250)
+        return img
 
     def Elec_compass(self, angle):
         # Load image from file
-        #img = cv2.imread(self.args["compass1.png"])
-
-        # Grab the dimension of the image and calculate the centre of the image
-        #(h, w) = image.shape[:2]
-        #(cX, cY) = (w//2, h//2)
-
-        # Rotate the image with boundaries
-        
         self.compass= cv2.imread("compass4.png")
-        angle_alt = -angle
-        rotated = imutils.rotate(self.compass, angle_alt)
-        cv2.imshow("Electronic Compass", rotated)
-        cv2.waitKey(50)
-        # # Create an Image object from an Image
-        # colorImage = Image.open("compass4.png")
-        # # Rotate it by 45 degrees
-        # rotated = colorImage.rotate(-angle)
-        # # Display the Image and rotate along with the angle
-        # rotated.show()
+        rotating = imutils.rotate(self.compass, -angle)
+        #cv2.imshow("Electronic Compass", rotating)
+        #cv2.waitKey(250)
+        return rotating
+
+    def join(self, scale, imgArray):
+        rows = len(imgArray)
+        cols = len(imgArray[0])
+        rowsAvailable = isinstance(imgArray[0], list)
+        width = imgArray[0][0].shape[1]
+        height = imgArray[0][0].shape[0]
+        if rowsAvailable:
+            for x in range(0, rows):
+                for y in range(0, cols):
+                    if imgArray[x][y].shape[:2] == imgArray[0][0].shape[:2]:
+                        imgArray[x][y] = cv2.resize(imgArray[x][y], (0, 0), None, scale, scale)
+                    else:
+                        imgArray[x][y] = cv2.resize(imgArray[x][y], (imgArray[0][0].shape[1], imgArray[0][0].shape[0]),
+                                                    None, scale, scale)
+                    if len(imgArray[x][y].shape) == 2: imgArray[x][y] = cv2.cvtColor(imgArray[x][y], cv2.COLOR_GRAY2BGR)
+            imageBlank = np.zeros((height, width, 3), np.uint8)
+            hor = [imageBlank] * rows
+            hor_con = [imageBlank] * rows
+            for x in range(0, rows):
+                hor[x] = np.hstack(imgArray[x])
+            ver = np.vstack(hor)
+        else:
+            for x in range(0, rows):
+                if imgArray[x].shape[:2] == imgArray[0].shape[:2]:
+                    imgArray[x] = cv2.resize(imgArray[x], (0, 0), None, scale, scale)
+                else:
+                    imgArray[x] = cv2.resize(imgArray[x], (imgArray[0].shape[1], imgArray[0].shape[0]), None, scale,
+                                             scale)
+                if len(imgArray[x].shape) == 2: imgArray[x] = cv2.cvtColor(imgArray[x], cv2.COLOR_GRAY2BGR)
+            hor = np.hstack(imgArray)
+            ver = hor
+
+        cv2.imshow("Task 3", ver)
+        cv2.waitKey(1)
+        #return ver
+
+    def close(self):
+        '''
+        Closes the camera and destroys all window
+        '''
+        self.cam.release()
+        cv2.destroyAllWindows()
+
 
 
 
