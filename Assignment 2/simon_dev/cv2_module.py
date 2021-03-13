@@ -8,11 +8,12 @@ class openCV():
         Initialize Camera
         '''
         self.cap = cv2.VideoCapture(0)
-        "Starting Camera"
+        print("Starting Camera")
 
     def Camera(self):
         success, frame = self.cap.read()
         cv2.imshow('Camera', frame)
+        print("Showing Camera")
         k = cv2.waitKey(1) % 256
         if k == 27:  # ESC
             print("quitting...")
