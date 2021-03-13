@@ -6,7 +6,6 @@ from cv2_module import openCV
 OpenCV = openCV()
 Mpu = mpu(-7.5634,20.5034,-34.7336,-6.7746)
 
-
 def main():
     OpenCV.Camera()
 

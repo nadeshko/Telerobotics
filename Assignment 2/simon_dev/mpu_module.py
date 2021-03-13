@@ -12,8 +12,8 @@ class mpu():
 
     def read_mpu(self):
         accel = self.mpu9250.readAccel()
-        ax = round(256 + (256 * accel['x']))
-        ay = round(256 - (256 * accel['y']))
+        ax = round(240 + (240 * accel['x']))
+        ay = round(240 - (240 * accel['y']))
 
         mag = self.mpu9250.readMagnet()
         mx = 2 * ((mag['x'] - self.min_mx) / (self.max_mx - self.min_mx)) - 1

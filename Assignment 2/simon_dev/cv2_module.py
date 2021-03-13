@@ -8,12 +8,14 @@ class openCV():
         Initialize Camera
         '''
         self.cap = cv2.VideoCapture(0)
+        self.cap.set(3, 640)
+        self.cap.set(4, 480)
+        self.cap.set(10, 100)
         print("Starting Camera")
 
     def Camera(self):
         success, frame = self.cap.read()
         cv2.imshow('Camera', frame)
-        print("Showing Camera")
         k = cv2.waitKey(1) % 256
         if k == 27:  # ESC
             print("quitting...")
@@ -21,12 +23,12 @@ class openCV():
         
     def Elec_lvl(self, x, y):
         # Create a black image (size:512*512)
-        img = np.zeros((512, 512, 3), np.uint8)
+        img = np.zeros((480, 480, 3), np.uint8)
         # Draw two digital blue lines
-        cv2.line(img, (0, 256), (512, 256), (255, 0, 0), 1)
-        cv2.line(img, (256, 0), (256, 512), (255, 0, 0), 1)
+        cv2.line(img, (0, 240), (480, 240), (255, 0, 0), 1)
+        cv2.line(img, (240, 0), (240, 480), (255, 0, 0), 1)
         # Draw a filled cycle
-        cv2.circle(img, (x, y), 28, (0, 255, 255), -1)
+        cv2.circle(img, (x, y), 22, (0, 255, 255), -1)
         # Show the result
         cv2.imshow('Electronic Level', img)
         cv2.namedWindow('Electronic Level')
@@ -35,7 +37,8 @@ class openCV():
     def Elec_compass(self, angle):
         # Load image from file
         compass= cv2.imread("compass4.png")
-        rotating = imutils.rotate(compass, -angle)
+        resize = cv2.resize(compass, (480,480))
+        rotating = imutils.rotate(resize, -angle)
         cv2.imshow("Electronic Compass", rotating)
         cv2.waitKey(250)
 
