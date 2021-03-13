@@ -8,6 +8,8 @@ class openCV():
         Initialize Camera
         '''
         self.cam = cv2.VideoCapture(0)
+        self.cam.set(3, 683)
+        self.cam.set(4, 512)
 
     def Camera(self):
         ret, frame = self.cam.read()
@@ -32,7 +34,8 @@ class openCV():
     def Elec_compass(self, angle):
         # Load image from file
         self.compass= cv2.imread("compass4.png")
-        rotating = imutils.rotate(self.compass, -angle)
+        resize = cv2.resize(self.compass, (512,512))
+        rotating = imutils.rotate(resize, -angle)
         #cv2.imshow("Electronic Compass", rotating)
         #cv2.waitKey(250)
         return rotating
