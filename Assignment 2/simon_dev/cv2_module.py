@@ -43,7 +43,7 @@ class openCV():
         '''
         Closes the camera and destroys all window
         '''
-        self.cam.release()
+        self.cap.release()
         cv2.destroyAllWindows()
 
 
