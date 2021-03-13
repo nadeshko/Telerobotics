@@ -8,8 +8,8 @@ class openCV():
         Initialize Camera
         '''
         self.cam = cv2.VideoCapture(0)
-        self.cam.set(3, 683)
-        self.cam.set(4, 512)
+        self.cam.set(3, 640)
+        self.cam.set(4, 480)
 
     def Camera(self):
         ret, frame = self.cam.read()
