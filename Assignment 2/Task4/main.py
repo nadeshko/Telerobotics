@@ -2,7 +2,20 @@ import RPi.GPIO as GPIO
 from mpuModule import mpu
 
 def main():
-    angle = Mpu.read_mag()
+    Mpu.read_mag()
+
+    #(ITS TURNING RIGHT, MUST TURN LEFT)
+    '''if angle > 155:
+        err = angle - 155
+        print(f"error = {err}")
+        move(Spd + abs(err) * 0.6, Spd - abs(err) * 0.11)
+    elif angle < 155:
+        err = angle - 155
+        print(f"error = {err}")
+        move(Spd - abs(err) * 0.11, Spd + abs(err) * 0.6)
+    else:
+        move(Spd, Spd)'''
+
 
 if __name__ == '__main__':
     # Set GPIO call mode as BCM
@@ -33,7 +46,46 @@ if __name__ == '__main__':
     RightM.start(0)
     LeftM.start(0)
 
-    Mpu = mpu(-7.5634, 20.5034, -34.7336, -6.7746)
+    Mpu = mpu(-26.1666, 40.1818, -63.947, 4.3732)
+    '''
+    # MOVE 1: 90 for 0.75 second
+    move(90,90)
+    sleep(1.25)
+    move(0,0) # Stops
+    sleep(1)
+    angle = Mpu.read_mag()
+    print(angle)
+    if angle > 155:
+        err = angle - 155
+        print(f"error = {err}")
+        move(60 + abs(err)*0.01, 60 - abs(err) * 0.9)
+    elif angle < 155:
+        err = angle - 155
+        print(f"error = {err}")
+        move(60 - abs(err) * 0.75, 60 + abs(err)*0.01)
+    sleep(1)
+
+    # MOVE 2: 40 for 2.5 sec
+    move(40,40)
+    sleep(2)
+    move(0,0)
+    sleep(1)
+    angle = Mpu.read_mag()
+    print(angle)
+    if angle > 155:
+        err = angle - 155
+        print(f"error = {err}")
+        move(60 + abs(err)*0.01, 60 - abs(err) * 0.9)
+    elif angle < 155:
+        err = angle - 155
+        print(f"error = {err}")
+        move(60 - abs(err) * 0.75, 60 + abs(err)*0.01)
+    sleep(1)
+
+    move(75,75)
+    sleep(1.35)
+    move(0, 0)
+    sleep(1)'''
 
     while True:
         main()
