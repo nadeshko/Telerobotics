@@ -30,10 +30,10 @@ x = 0
 y = 0
 Speed = 0
 rotate = 0
-S1 = 0
-S2 = 120
+S1 = 10
+S2 = 125
 S3 = 90
-S4 = 0
+S4 = 90
 S7 = 0
 S8 = 90
 img_counter = 0
@@ -284,9 +284,9 @@ if __name__ == '__main__':
                 elif event.key == pygame.K_KP3:
                     up(3)
                 # Servo 4 Control
-                elif event.key == pygame.K_MINUS:
+                elif event.key == pygame.K_KP_MINUS:
                     down(4)
-                elif event.key == pygame.K_PLUS:
+                elif event.key == pygame.K_KP_PLUS:
                     up(4)
                 # Servo 7 Control
                 elif event.key == pygame.K_UP:
