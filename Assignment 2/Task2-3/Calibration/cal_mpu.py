@@ -28,9 +28,4 @@ class mpu():
         avg_mx = np.asarray(self.avg_mx)
         avg_my = np.asarray(self.avg_my)
 
-        total_avg_mx = sum(mx)/len(mx)
-        total_avg_my = sum(my)/len(my)
-
-        print(total_avg_mx, total_avg_my)
-
         return mx, my, avg_mx, avg_my

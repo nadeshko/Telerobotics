@@ -30,12 +30,12 @@ x = 0
 y = 0
 Speed = 0
 rotate = 0
-S1 = 10
-S2 = 90
-S3 = 125
-S4 = 90
+S1 = 0
+S2 = 120
+S3 = 90
+S4 = 0
 S7 = 0
-S8 = 80
+S8 = 90
 img_counter = 0
 edit_img_clear = True
 Servo.XiaoRGEEK_SetServoAngle(1,S1)
@@ -132,8 +132,8 @@ def down(servo):
         Servo.XiaoRGEEK_SetServoAngle(servo, S3)
     elif servo == 4:
         S4 -= 5
-        if S4 <= 80:
-            S4 = 80
+        if S4 <= 0:
+            S4 = 0
         Servo.XiaoRGEEK_SetServoAngle(servo, S4)
     elif servo == 7:
         S7 -= 5
@@ -164,8 +164,8 @@ def up(servo):
         Servo.XiaoRGEEK_SetServoAngle(servo, S3)
     elif servo == 4:
         S4 += 5
-        if S4 >= 140:
-            S4 = 140
+        if S4 >= 90:
+            S4 = 90
         Servo.XiaoRGEEK_SetServoAngle(servo, S4)
     elif servo == 7:
         S7 += 5
@@ -284,9 +284,9 @@ if __name__ == '__main__':
                 elif event.key == pygame.K_KP3:
                     up(3)
                 # Servo 4 Control
-                elif event.key == pygame.K_KP_MINUS:
+                elif event.key == pygame.K_MINUS:
                     down(4)
-                elif event.key == pygame.K_KP_PLUS:
+                elif event.key == pygame.K_PLUS:
                     up(4)
                 # Servo 7 Control
                 elif event.key == pygame.K_UP:

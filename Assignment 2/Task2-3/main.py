@@ -4,7 +4,7 @@ from cv2_module import openCV
 
 # Sends calibrated data and initialize camera
 OpenCV = openCV()
-Mpu = mpu(-7.5634, 20.5034, -34.7336, -6.7746)
+Mpu = mpu(-7.5634,20.5034,-34.7336,-6.7746)
 
 def main():
     '''

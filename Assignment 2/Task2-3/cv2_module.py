@@ -10,12 +10,16 @@ class openCV():
         self.cap = cv2.VideoCapture(0)
         self.cap.set(3, 640)
         self.cap.set(4, 480)
+        self.cap.set(10, 100)
         print("Starting Camera")
 
     def Camera(self):
         success, frame = self.cap.read()
         cv2.imshow('Camera', frame)
-        cv2.waitKey(1)
+        k = cv2.waitKey(1) % 256
+        if k == 27:  # ESC
+            print("quitting...")
+            cv2.destroyAllWindows()
         
     def Elec_lvl(self, x, y):
         # Create a black image (size:512*512)
@@ -32,7 +36,7 @@ class openCV():
 
     def Elec_compass(self, angle):
         # Load image from file
-        compass = cv2.imread("compass.png")
+        compass= cv2.imread("compass4.png")
         resize = cv2.resize(compass, (480,480))
         rotating = imutils.rotate(resize, -angle)
         cv2.imshow("Electronic Compass", rotating)
