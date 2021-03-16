@@ -25,7 +25,7 @@ IN2=16
 IN3=21
 IN4=26
 
-# Initial Values
+# Initial Values (for grabbing)
 x = 0
 y = 0
 Speed = 0
