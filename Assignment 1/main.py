@@ -30,9 +30,9 @@ x = 0
 y = 0
 Speed = 0
 rotate = 0
-S1 = 10
+S1 = 55 #10
 S2 = 90
-S3 = 125
+S3 = 170 #125
 S4 = 90
 S7 = 0
 S8 = 80
@@ -127,8 +127,8 @@ def down(servo):
         Servo.XiaoRGEEK_SetServoAngle(servo, S2)
     elif servo == 3:
         S3 -= 5
-        if S3 <= 0:
-            S3 = 0
+        if S3 <= 60:
+            S3 = 60
         Servo.XiaoRGEEK_SetServoAngle(servo, S3)
     elif servo == 4:
         S4 -= 5
