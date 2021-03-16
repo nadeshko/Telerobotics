@@ -15,7 +15,7 @@ GPIO.setwarnings(False)
 Servo = XR_Servo()
 
 # Allow Camera
-cam = cv2.VideoCapture(0)
+#cam = cv2.VideoCapture(0)
 
 ## Define Ports
 ENA=13
@@ -36,7 +36,7 @@ S3 = 125
 S4 = 90
 S7 = 0
 S8 = 80
-img_counter = 0
+#img_counter = 0
 edit_img_clear = True
 Servo.XiaoRGEEK_SetServoAngle(1,S1)
 Servo.XiaoRGEEK_SetServoAngle(2,S2)
@@ -181,9 +181,9 @@ def up(servo):
 if __name__ == '__main__':
     while True:
 
-        ret, frame = cam.read()
-        cv2.imshow('Camera', frame)
-
+        #ret, frame = cam.read()
+        #cv2.imshow('Camera', frame)
+        '''
         k = cv2.waitKey(1) % 256
         if k == 27:  # ESC
             print("quitting...")
@@ -236,7 +236,7 @@ if __name__ == '__main__':
                 cv2.destroyWindow("Rotated Image")
             else:
                 print('image couldnt be read! try again')
-
+        '''
         # Keyboard inputs
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -305,5 +305,5 @@ if __name__ == '__main__':
             elif event.type == pygame.KEYUP:
                 Stop()
 
-cam.release()
-cv2.destroyAllWindows()
+#cam.release()
+#cv2.destroyAllWindows()
