@@ -29,16 +29,64 @@ def get_distance():
     return dis
 
 def basicConfig(S1, S2, S3, S4):
-    Servo.XiaoRGEEK_SetServoAngle(1, 55)
-    Servo.XiaoRGEEK_SetServoAngle(2, 90)
-    Servo.XiaoRGEEK_SetServoAngle(3, 170)
-    Servo.XiaoRGEEK_SetServoAngle(4, 90)
+    if S1 > 55:
+        for i in range (S1, 54, -1):
+            Servo.XiaoRGEEK_SetServoAngle(1, i)
+    elif S1 < 55:
+        for i in range (S1, 56, 1):
+            Servo.XiaoRGEEK_SetServoAngle(1, i)
+
+    if S3 < 170:
+        for i in range (S3, 171, 1):
+            Servo.XiaoRGEEK_SetServoAngle(3, i)
+    elif S3 > 170:
+        for i in range (S3, 169, -1):
+            Servo.XiaoRGEEK_SetServoAngle(3, i)
+
+    if S2 > 90:
+        for i in range (S2, 89, -1):
+            Servo.XiaoRGEEK_SetServoAngle(2, i)
+    elif S2 < 90:
+        for i in range (S2, 91, 1):
+            Servo.XiaoRGEEK_SetServoAngle(2, i)
+
+    if S4 > 90:
+        for i in range (S4, 89, -1):
+            Servo.XiaoRGEEK_SetServoAngle(4, i)
+    elif S4 < 90:
+        for i in range (S4, 91, 1):
+            Servo.XiaoRGEEK_SetServoAngle(4, i)
+    sleep(1)
 
 def grabConfig(S1, S2, S3, S4):
-    Servo.XiaoRGEEK_SetServoAngle(1, 10)
-    Servo.XiaoRGEEK_SetServoAngle(2, 90)
-    Servo.XiaoRGEEK_SetServoAngle(3, 125)
-    Servo.XiaoRGEEK_SetServoAngle(4, 90)
+    if S3 < 125:
+        for i in range (S3, 126, 1):
+            Servo.XiaoRGEEK_SetServoAngle(3, i)
+    elif S3 > 125:
+        for i in range (S3, 124, -1):
+            Servo.XiaoRGEEK_SetServoAngle(3, i)
+
+    if S1 > 10:
+        for i in range (S1, 9, -1):
+            Servo.XiaoRGEEK_SetServoAngle(1, i)
+    elif S1 < 10:
+        for i in range (S1, 11, 1):
+            Servo.XiaoRGEEK_SetServoAngle(1, i)
+
+    if S2 > 90:
+        for i in range(S2, 89, -1):
+            Servo.XiaoRGEEK_SetServoAngle(2, i)
+    elif S2 < 90:
+        for i in range(S2, 91, 1):
+            Servo.XiaoRGEEK_SetServoAngle(2, i)
+
+    if S4 > 90:
+        for i in range(S4, 89, -1):
+            Servo.XiaoRGEEK_SetServoAngle(4, i)
+    elif S4 < 90:
+        for i in range(S4, 91, 1):
+            Servo.XiaoRGEEK_SetServoAngle(4, i)
+    sleep(1)
 
 def grabNpour():
     #             S1  S2  S3   S4
@@ -46,7 +94,7 @@ def grabNpour():
     # grab_pos : (10, 90, 125, 90)
     # grabbing : (10, 90, 125, 130)
     sleep(0.5)
-    for S4 in range (90, 131, 1):
+    for S4 in range (90, 126, 1):
         Servo.XiaoRGEEK_SetServoAngle(4, S4)
         #sleep(0.1)
     # lifting  : (55, 90, 170, 125)
