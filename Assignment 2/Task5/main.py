@@ -16,7 +16,7 @@ def get_distance():
     while GPIO.input(ECHO):
         pass
     t2 = time()
-    sleep(0.1)
+    #sleep(0.1)
 
     dis = int((t2-t1)*340/2*100)
     if dis < 255:
@@ -36,7 +36,7 @@ def getKey(key):
     pygame.display.update()
     return Pressed
 
-def move(R_Spd = 0.5, L_Spd = 0.5):
+def move(L_Spd = 0.5, R_Spd = 0.5):
     R_Spd *= 100
     L_Spd *= 100
 
@@ -78,29 +78,43 @@ def main():
     dis = get_distance()
 
     # Robot Movements
-    if getKey('w'):
-        if getKey('a'):
-            print('Moving For-Left')
+    if dis >= 27:
+        if getKey('w'):
+            if getKey('a'):
+                move(Spd - Spd * 0.5, Spd)
+            elif getKey('d'):
+                move(Spd, Spd - Spd * 0.5)
+            else:
+                move(Spd, Spd)
+        elif getKey('s'):
+            if getKey('a'):
+                move(-Spd + Spd * 0.5, -Spd)
+            elif getKey('d'):
+                move(-Spd, -Spd + Spd * 0.5)
+            else:
+                move(-Spd, -Spd)
         elif getKey('d'):
-            print('Moving For-right')
-        else:
-            print('Moving Forward')
-            move(Spd, Spd)
-    elif getKey('s'):
-        if getKey('a'):
-            print('Moving Bck-Left')
+            move(Spd, 0)
+        elif getKey('a'):
+            move(0, Spd)
+
+        else: move(0, 0)
+    else:
+        if getKey('s'):
+            if getKey('a'):
+                move(-Spd + Spd * 0.5, -Spd)
+            elif getKey('d'):
+                move(-Spd, -Spd + Spd * 0.5)
+            else:
+                move(-Spd, -Spd)
         elif getKey('d'):
-            print('Moving Bck-right')
-        else:
-            print('Moving Backward')
-            move(-Spd, -Spd)
-    elif getKey('d'):
-        print('Turning Right')
-    elif getKey('a'):
-        print('Turning Left')
+            move(Spd, 0)
+        elif getKey('a'):
+            move(0, Spd)
+        else: move(0, 0)
 
     # Robot acceleration/deceleration
-    elif getKey('LSHIFT'):
+    if getKey('LSHIFT'):
         if Spd >= 1:
             Spd = 1
         else:
@@ -113,12 +127,6 @@ def main():
             Spd -= 0.1
             print(Spd)
 
-    else:
-        move(0,0)
-
-    # Stop 2cm in front of robot arm
-    if dis < 27:
-        move(0,0)
 
 if __name__ == '__main__':
     # Initialize pygame and opens window
