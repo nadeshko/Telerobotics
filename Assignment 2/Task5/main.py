@@ -135,6 +135,52 @@ def getKey(key):
     pygame.display.update()
     return Pressed
 
+def down(servo):
+    global S1, S2, S3, S4, S7, S8
+    if servo == 1:
+        S1 -= 5
+        if S1 <= 0:
+            S1 = 0
+        Servo.XiaoRGEEK_SetServoAngle(servo, S1)
+    elif servo == 2:
+        S2 -= 5
+        if S2 <= 0:
+            S2 = 0
+        Servo.XiaoRGEEK_SetServoAngle(servo, S2)
+    elif servo == 3:
+        S3 -= 5
+        if S3 <= 60:
+            S3 = 60
+        Servo.XiaoRGEEK_SetServoAngle(servo, S3)
+    elif servo == 4:
+        S4 -= 5
+        if S4 <= 80:
+            S4 = 80
+        Servo.XiaoRGEEK_SetServoAngle(servo, S4)
+
+def up(servo):
+    global S1, S2, S3, S4, S7, S8
+    if servo == 1:
+        S1 += 5
+        if S1 >= 180:
+            S1 = 180
+        Servo.XiaoRGEEK_SetServoAngle(servo, S1)
+    elif servo == 2:
+        S2 += 5
+        if S2 >= 180:
+            S2 = 180
+        Servo.XiaoRGEEK_SetServoAngle(servo, S2)
+    elif servo == 3:
+        S3 += 5
+        if S3 >= 180:
+            S3 = 180
+        Servo.XiaoRGEEK_SetServoAngle(servo, S3)
+    elif servo == 4:
+        S4 += 5
+        if S4 >= 140:
+            S4 = 140
+        Servo.XiaoRGEEK_SetServoAngle(servo, S4)
+
 def move(L_Spd = 0.6, R_Spd = 0.6):
     R_Spd *= 100
     L_Spd *= 100
@@ -226,9 +272,23 @@ def main():
             Spd -= 0.1
             print(f"Speed = {Spd}")
 
+    # Servo Control
+    elif getKey('KP4'):
+        down(1)
+    elif getKey('KP7'):
+        up(1)
+    elif getKey('KP9'):
+        down(2)
+    elif getKey('KP6'):
+        up(2)
     elif getKey('KP1'):
-        #TODO: vertical angle limits
-        pass
+        down(3)
+    elif getKey('KP3'):
+        up(3)
+    elif getKey('KP_MINUS'):
+        down(4)
+    elif getKey('KP_PLUS'):
+        up(4)
 
     elif getKey('g'):
         grabConfig(S1,S2,S3,S4)
