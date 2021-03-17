@@ -5,6 +5,14 @@ import RPi.GPIO as GPIO
 import pygame
 import sys
 
+#############################################################################################
+###            TASK 5: Max and Min Values of Robotic Arm + Grabbing & Pouring             ###
+###                          Telerobotics, University of Birmingham                       ###
+###                      Contributors: William Lubiantoro & Simon Chow                    ###
+###                                   March 24, 2021                                      ###
+#############################################################################################
+
+# Global Values
 Spd = 0.6
 S1 = 55
 S2 = 90
@@ -12,12 +20,15 @@ S3 = 170
 S4 = 90
 
 def basicConfig(s1, s2, s3, s4):
+    """
+    Moves robotic arm to its basic configuration from any arm configuration
+    """
     global S1, S2, S3, S4
+
     if s1 > 55:
         for i in range (s1, 54, -1):
             Servo.XiaoRGEEK_SetServoAngle(1, i)
             S1 = i
-
     elif s1 < 55:
         for i in range (s1, 56, 1):
             Servo.XiaoRGEEK_SetServoAngle(1, i)
@@ -59,6 +70,9 @@ def basicConfig(s1, s2, s3, s4):
         pass
 
 def grabConfig(s1, s2, s3, s4):
+    """
+    Moves robotic arm to its grabbing configuration from any arm configuration
+    """
     global S1, S2, S3, S4
     if s3 < 125:
         for i in range (s3, 126, 1):
@@ -105,6 +119,9 @@ def grabConfig(s1, s2, s3, s4):
         pass
 
 def get_distance():
+    """
+    Returns the distance read by the ultrasonic sensor in cm
+    """
     sleep(0.0005)
     GPIO.output(TRIG, GPIO.HIGH)
     sleep(0.000015)
@@ -122,7 +139,7 @@ def get_distance():
     return dis
 
 def chk_vert_lim(s1, s2, s3):
-    '''
+    """
     Checks for the limit of the vertical component at 3 points of the robot arm (f, g, h).
     If any of these points go further than 10 degrees from Joint 1, angle won't change.
 
@@ -130,7 +147,7 @@ def chk_vert_lim(s1, s2, s3):
     S1    = 55 + tetha_1  (angle at Joint 1)
     S3_L  = 80 - tetha_2  (angle at Joint 2, short side of link 2)
     S3_h  = 154 - tetha_2 (angle at Joint 2, hypotenuse of link 2)
-    '''
+    """
     m = 9.7    # length of link 1
     nh = 14.56 # hypotenuse of the L link
     nc = 4     # short stick of the L link
@@ -144,10 +161,13 @@ def chk_vert_lim(s1, s2, s3):
         f = m * sin(radians(s1 - 55)) + nh * sin(radians(s1 - s3 + 99))
     g = m * sin(radians(s1 - 55)) + nc * sin(radians(s1 - s3 + 25))
     y_total = max(f,g)
-    #print(f" y total = {y_total}")
+    #print(f" y total = {y_total}") # DEBUG
     return y_total
 
 def grabNpour():
+    """
+    Function to automate the the process of grabbing and pouring a small bottle
+    """
     #             S1  S2  S3   S4
     # initial  : (55, 90, 170, 90)
     # grab_pos : (10, 90, 125, 90)
@@ -193,6 +213,9 @@ def getKey(key):
     return Pressed
 
 def down(servo):
+    """
+    Function to decrease servo angles based on keyboard press
+    """
     global S1, S2, S3, S4
     min_lim = - 10
 
@@ -233,6 +256,9 @@ def down(servo):
         Servo.XiaoRGEEK_SetServoAngle(servo, S4)
 
 def up(servo):
+    """
+    Function to increase servo angles based on keyboard press
+    """
     global S1, S2, S3, S4
     min_lim = - 10
 
@@ -273,6 +299,9 @@ def up(servo):
         Servo.XiaoRGEEK_SetServoAngle(servo, S4)
 
 def move(L_Spd = 0.6, R_Spd = 0.6):
+    """
+    Function for 360 robot movement based on keyboard presses
+    """
     R_Spd *= 100
     L_Spd *= 100
 
@@ -309,12 +338,15 @@ def move(L_Spd = 0.6, R_Spd = 0.6):
         GPIO.output(IN4, False)
 
 def main():
+    """
+    main function in while loop
+    """
     global Spd, S1, S2, S3, S4
 
-    dis = get_distance()
+    dis = get_distance() # Gets and prints distance from ultrasonic sensor
 
     # Robot Movements
-    if dis > 30:
+    if dis > 30: # move any direction while distance above 30 cm
         if getKey('w'):
             if getKey('a'):
                 move(Spd - 0.25, Spd)
@@ -335,7 +367,7 @@ def main():
             move(-Spd, Spd)
 
         else: move(0, 0)
-    else:
+    else: # cannot move forward for a distance smaller than 30 cm
         if getKey('s'):
             if getKey('a'):
                 move(-Spd + 0.25, -Spd)
@@ -381,6 +413,7 @@ def main():
     elif getKey('KP_PLUS'):
         up(4)
 
+    # Shortcuts to pre-determined configs
     elif getKey('g'):
         grabConfig(S1,S2,S3,S4)
 
