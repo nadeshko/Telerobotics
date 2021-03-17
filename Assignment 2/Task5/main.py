@@ -5,6 +5,10 @@ import pygame
 import sys
 
 Spd = 0.6
+S1 = 55
+S2 = 90
+S3 = 170
+S4 = 90
 
 def get_distance():
     sleep(0.0005)
@@ -24,47 +28,51 @@ def get_distance():
         print(f"Distance: {dis} cm")
     return dis
 
-def basicConfig():
+def basicConfig(S1, S2, S3, S4):
     Servo.XiaoRGEEK_SetServoAngle(1, 55)
     Servo.XiaoRGEEK_SetServoAngle(2, 90)
     Servo.XiaoRGEEK_SetServoAngle(3, 170)
+    Servo.XiaoRGEEK_SetServoAngle(4, 90)
+
+def grabConfig(S1, S2, S3, S4):
+    Servo.XiaoRGEEK_SetServoAngle(1, 10)
+    Servo.XiaoRGEEK_SetServoAngle(2, 90)
+    Servo.XiaoRGEEK_SetServoAngle(3, 125)
     Servo.XiaoRGEEK_SetServoAngle(4, 90)
 
 def grabNpour():
     #             S1  S2  S3   S4
     # initial  : (55, 90, 170, 90)
     # grab_pos : (10, 90, 125, 90)
-    Servo.XiaoRGEEK_SetServoAngle(3, 125)
-    sleep(1)
-    Servo.XiaoRGEEK_SetServoAngle(1, 10)
-    sleep(1)
-    # grabbing : (10, 90, 125, 125)
-    for S4 in range (90, 125, 5):
+    # grabbing : (10, 90, 125, 130)
+    sleep(0.5)
+    for S4 in range (90, 131, 1):
         Servo.XiaoRGEEK_SetServoAngle(4, S4)
-        sleep(0.75)
-    sleep(1)
+        #sleep(0.1)
     # lifting  : (55, 90, 170, 125)
-    for S3 in range (125, 175, 5):
+    for S3 in range (125, 171, 1):
+        Servo.XiaoRGEEK_SetServoAngle(1, S3 - 115)
+        #sleep(0.1)
         Servo.XiaoRGEEK_SetServoAngle(3, S3)
-        sleep(0.75)
-        Servo.XiaoRGEEK_SetServoAngle(1, S3-115)
-        sleep(0.75)
-    sleep(1)
+        #sleep(0.1)
     # pouring  : (55, 0, 170, 125)
-    for S2 in range (90, -5, -10):
+    for S2 in range (90, 181, 1):
         Servo.XiaoRGEEK_SetServoAngle(2, S2)
-        sleep(0.75)
     sleep(1)
     # return   : (55, 90, 170, 125)
-    Servo.XiaoRGEEK_SetServoAngle(2, 90)
+    for S2 in range(180, 89, -1):
+        Servo.XiaoRGEEK_SetServoAngle(2, S2)
+    # putting  : (10, 90, 125, 125)
+    for S3 in range (170, 124, -1):
+        Servo.XiaoRGEEK_SetServoAngle(3, S3)
+        #sleep(0.1)
+        Servo.XiaoRGEEK_SetServoAngle(1, S3 - 115)
+        #sleep(0.1)
+    # releasing: (10, 90, 125, 90)
+    for S4 in range(125, 89, -1):
+        Servo.XiaoRGEEK_SetServoAngle(4, S4)
+        #sleep(0.1)
     sleep(1)
-    # putting  : (10, 90, 125, 90)
-    Servo.XiaoRGEEK_SetServoAngle(3, 125)
-    sleep(1)
-    Servo.XiaoRGEEK_SetServoAngle(1, 10)
-    sleep(1)
-    Servo.XiaoRGEEK_SetServoAngle(4, 90)
-    sleep(3)
 
 def getKey(key):
     """
@@ -116,7 +124,7 @@ def move(L_Spd = 0.6, R_Spd = 0.6):
         GPIO.output(IN4, False)
 
 def main():
-    global Spd
+    global Spd, S1, S2, S3, S4
 
     dis = get_distance()
 
@@ -170,13 +178,20 @@ def main():
             Spd -= 0.1
             print(f"Speed = {Spd}")
 
-    elif getKey('KP_1'):
+    elif getKey('KP1'):
         #TODO: vertical angle limits
         pass
 
     elif getKey('g'):
+        grabConfig(S1,S2,S3,S4)
+
+    elif getKey('b'):
+        basicConfig(S1,S2,S3,S4)
+
+    elif getKey('p'):
         grabNpour()
-        basicConfig()
+
+
 
 if __name__ == '__main__':
     # Initialize pygame and opens window
@@ -201,10 +216,6 @@ if __name__ == '__main__':
     TRIG = 17
 
     # Initial values
-    S1 = 55  # 10
-    S2 = 90
-    S3 = 170  # 125
-    S4 = 90
     Servo.XiaoRGEEK_SetServoAngle(1, S1)
     Servo.XiaoRGEEK_SetServoAngle(2, S2)
     Servo.XiaoRGEEK_SetServoAngle(3, S3)
