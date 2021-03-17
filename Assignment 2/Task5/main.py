@@ -1,32 +1,16 @@
 from _XiaoRGEEK_SERVO_ import XR_Servo
 from time import sleep, time
+from math import sin, cos
 import RPi.GPIO as GPIO
 import pygame
 import sys
 
 Spd = 0.6
-S1 = 55
+S1 = 55 # 0 degree
 S2 = 90
-S3 = 170
+S3 = 170 # 0 degree
 S4 = 90
-
-def get_distance():
-    sleep(0.0005)
-    GPIO.output(TRIG, GPIO.HIGH)
-    sleep(0.000015)
-    GPIO.output(TRIG, GPIO.LOW)
-    while not GPIO.input(ECHO):
-        pass
-    t1 = time()
-    while GPIO.input(ECHO):
-        pass
-    t2 = time()
-    #sleep(0.1)
-
-    dis = int((t2-t1)*340/2*100)
-    if dis < 255:
-        print(f"Distance: {dis} cm")
-    return dis
+# TODO: get angles for vertical axis in robot to calculate limit
 
 def basicConfig(s1, s2, s3, s4):
     global S1, S2, S3, S4
@@ -121,21 +105,47 @@ def grabConfig(s1, s2, s3, s4):
     else:
         pass
 
+def get_distance():
+    sleep(0.0005)
+    GPIO.output(TRIG, GPIO.HIGH)
+    sleep(0.000015)
+    GPIO.output(TRIG, GPIO.LOW)
+    while not GPIO.input(ECHO):
+        pass
+    t1 = time()
+    while GPIO.input(ECHO):
+        pass
+    t2 = time()
+    #sleep(0.1)
+
+    dis = int((t2-t1)*340/2*100)
+    if dis < 255:
+        print(f"Distance: {dis} cm")
+    return dis
+
+def check_limit(s1, s3):
+    m = 9.7
+    n = 14.56
+    f = m * sin(s1 - 55) + n * sin(s1 - s3 - 99)
+
+    return f # would be max(f,g)
+
 def grabNpour():
     #             S1  S2  S3   S4
     # initial  : (55, 90, 170, 90)
     # grab_pos : (10, 90, 125, 90)
+    Servo.XiaoRGEEK_SetServoAngle(3, 125)
+    sleep(1)
+    Servo.XiaoRGEEK_SetServoAngle(1, 10)
+    sleep(1)
     # grabbing : (10, 90, 125, 130)
     sleep(0.5)
     for S4 in range (90, 126, 1):
         Servo.XiaoRGEEK_SetServoAngle(4, S4)
-        #sleep(0.1)
     # lifting  : (55, 90, 170, 125)
     for S3 in range (125, 171, 1):
         Servo.XiaoRGEEK_SetServoAngle(1, S3 - 115)
-        #sleep(0.1)
         Servo.XiaoRGEEK_SetServoAngle(3, S3)
-        #sleep(0.1)
     # pouring  : (55, 0, 170, 125)
     for S2 in range (90, 181, 1):
         Servo.XiaoRGEEK_SetServoAngle(2, S2)
@@ -146,13 +156,10 @@ def grabNpour():
     # putting  : (10, 90, 125, 125)
     for S3 in range (170, 124, -1):
         Servo.XiaoRGEEK_SetServoAngle(3, S3)
-        #sleep(0.1)
         Servo.XiaoRGEEK_SetServoAngle(1, S3 - 115)
-        #sleep(0.1)
     # releasing: (10, 90, 125, 90)
     for S4 in range(125, 89, -1):
         Servo.XiaoRGEEK_SetServoAngle(4, S4)
-        #sleep(0.1)
     sleep(1)
 
 def getKey(key):
@@ -170,11 +177,17 @@ def getKey(key):
 
 def down(servo):
     global S1, S2, S3, S4
+    min_lim = - 10
+
     if servo == 1:
         S1 -= 5
-        if S1 <= 0:
-            S1 = 0
-        Servo.XiaoRGEEK_SetServoAngle(servo, S1)
+        y_tot = check_limit(S1, S3)
+        if y_tot < min_lim:
+            S1 += 5
+        else:
+            if S1 <= 0:
+                S1 = 0
+            Servo.XiaoRGEEK_SetServoAngle(servo, S1)
     elif servo == 2:
         S2 -= 5
         if S2 <= 0:
@@ -182,9 +195,13 @@ def down(servo):
         Servo.XiaoRGEEK_SetServoAngle(servo, S2)
     elif servo == 3:
         S3 -= 5
-        if S3 <= 60:
-            S3 = 60
-        Servo.XiaoRGEEK_SetServoAngle(servo, S3)
+        y_tot = check_limit(S1, S3)
+        if y_tot < min_lim:
+            S3 += 5
+        else:
+            if S3 <= 60:
+                S3 = 60
+            Servo.XiaoRGEEK_SetServoAngle(servo, S3)
     elif servo == 4:
         S4 -= 5
         if S4 <= 80:
@@ -193,11 +210,17 @@ def down(servo):
 
 def up(servo):
     global S1, S2, S3, S4
+    min_lim = - 10
+
     if servo == 1:
         S1 += 5
-        if S1 >= 180:
-            S1 = 180
-        Servo.XiaoRGEEK_SetServoAngle(servo, S1)
+        y_tot = check_limit(S1, S3)
+        if y_tot < min_lim:
+            S1 -= 5
+        else:
+            if S1 >= 180:
+                S1 = 180
+            Servo.XiaoRGEEK_SetServoAngle(servo, S1)
     elif servo == 2:
         S2 += 5
         if S2 >= 180:
@@ -205,9 +228,13 @@ def up(servo):
         Servo.XiaoRGEEK_SetServoAngle(servo, S2)
     elif servo == 3:
         S3 += 5
-        if S3 >= 180:
-            S3 = 180
-        Servo.XiaoRGEEK_SetServoAngle(servo, S3)
+        y_tot = check_limit(S1, S3)
+        if y_tot < min_lim:
+            S3 -= 5
+        else:
+            if S3 >= 180:
+                S3 = 180
+            Servo.XiaoRGEEK_SetServoAngle(servo, S3)
     elif servo == 4:
         S4 += 5
         if S4 >= 140:
@@ -256,19 +283,19 @@ def main():
     dis = get_distance()
 
     # Robot Movements
-    if dis > 34:
+    if dis > 30:
         if getKey('w'):
             if getKey('a'):
-                move(0.5, 0.85)
+                move(Spd - 0.25, Spd)
             elif getKey('d'):
-                move(0.85, 0.5)
+                move(Spd, Spd - 0.25)
             else:
                 move(Spd, Spd)
         elif getKey('s'):
             if getKey('a'):
-                move(-0.5, -0.85)
+                move(-Spd + 0.25, -Spd)
             elif getKey('d'):
-                move(-0.85, -0.5)
+                move(-Spd, -Spd + 0.25)
             else:
                 move(-Spd, -Spd)
         elif getKey('d'):
@@ -280,9 +307,9 @@ def main():
     else:
         if getKey('s'):
             if getKey('a'):
-                move(-0.5, -0.85)
+                move(-Spd + 0.25, -Spd)
             elif getKey('d'):
-                move(-0.85, -0.5)
+                move(-Spd, -Spd + 0.25)
             else:
                 move(-Spd, -Spd)
         elif getKey('d'):
