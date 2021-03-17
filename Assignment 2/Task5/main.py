@@ -1,17 +1,16 @@
 from _XiaoRGEEK_SERVO_ import XR_Servo
+from math import radians, sin, cos
 from time import sleep, time
-from math import sin, cos
 import RPi.GPIO as GPIO
 import pygame
 import sys
 
 Spd = 0.6
-S1 = 55 # 0 degree
+S1 = 55
 S2 = 90
-S3 = 170 # 0 degree
+S3 = 170
 S4 = 90
-# TODO: get angles for vertical axis in robot to calculate limit
-
+'''
 def basicConfig(s1, s2, s3, s4):
     global S1, S2, S3, S4
     if s1 > 55:
@@ -121,15 +120,34 @@ def get_distance():
     dis = int((t2-t1)*340/2*100)
     if dis < 255:
         print(f"Distance: {dis} cm")
-    return dis
+    return dis'''
 
-def check_limit(s1, s3):
-    m = 9.7
-    n = 14.56
-    f = m * sin(s1 - 55) + n * sin(s1 - s3 - 99)
+def chk_vert_lim(s1, s2, s3):
+    '''
+    Checks for the limit of the vertical component at 3 points of the robot arm (f, g, h).
+    If any of these points go further than 10 degrees from Joint 1, angle won't change.
 
-    return f # would be max(f,g)
-
+    Needs conversion robot angle to 0-degree at x-axis (through offset)
+    S1    = 55 + tetha_1  (angle at Joint 1)
+    S3_L  = 80 - tetha_2  (angle at Joint 2, short side of link 2)
+    S3_h  = 154 - tetha_2 (angle at Joint 2, hypotenuse of link 2)
+    '''
+    m = 9.7    # length of link 1
+    nh = 14.56 # hypotenuse of the L link
+    nc = 4     # short stick of the L link
+    ef = -4.5  # End-effector radius
+    if s2 != 90: # orientation of EF, other than 90 it effects vertical limit
+        if s2 > 90:
+            f = m * sin(radians(s1 - 55)) + nh * sin(radians(s1 - s3 + 99)) + ef * cos(radians(180-s2))
+        elif s2 < 90:
+            f = m * sin(radians(s1 - 55)) + nh * sin(radians(s1 - s3 + 99)) + ef * cos(radians(s2))
+    else:
+        f = m * sin(radians(s1 - 55)) + nh * sin(radians(s1 - s3 + 99))
+    g = m * sin(radians(s1 - 55)) + nc * sin(radians(s1 - s3 + 25))
+    y_total = max(f,g)
+    #print(f" y total = {y_total}")
+    return y_total
+'''
 def grabNpour():
     #             S1  S2  S3   S4
     # initial  : (55, 90, 170, 90)
@@ -160,7 +178,7 @@ def grabNpour():
     # releasing: (10, 90, 125, 90)
     for S4 in range(125, 89, -1):
         Servo.XiaoRGEEK_SetServoAngle(4, S4)
-    sleep(1)
+    sleep(1)'''
 
 def getKey(key):
     """
@@ -176,28 +194,35 @@ def getKey(key):
     return Pressed
 
 def down(servo):
-    global S1, S2, S3, S4
+    global S1, S2, S3
     min_lim = - 10
 
     if servo == 1:
         S1 -= 5
-        y_tot = check_limit(S1, S3)
+        y_tot = chk_vert_lim(S1, S2, S3)
         if y_tot < min_lim:
             S1 += 5
+            print(f"angle is {y_tot}! below -10 cm")
         else:
             if S1 <= 0:
                 S1 = 0
             Servo.XiaoRGEEK_SetServoAngle(servo, S1)
     elif servo == 2:
         S2 -= 5
-        if S2 <= 0:
-            S2 = 0
-        Servo.XiaoRGEEK_SetServoAngle(servo, S2)
+        y_tot = chk_vert_lim(S1, S2, S3)
+        if y_tot < min_lim:
+            S2 += 5
+            print(f"angle is {y_tot}! below -10 cm")
+        else:
+            if S2 <= 0:
+                S2 = 0
+            Servo.XiaoRGEEK_SetServoAngle(servo, S2)
     elif servo == 3:
         S3 -= 5
-        y_tot = check_limit(S1, S3)
+        y_tot = chk_vert_lim(S1, S2, S3)
         if y_tot < min_lim:
             S3 += 5
+            print(f"angle is {y_tot}! below -10 cm")
         else:
             if S3 <= 60:
                 S3 = 60
@@ -214,23 +239,30 @@ def up(servo):
 
     if servo == 1:
         S1 += 5
-        y_tot = check_limit(S1, S3)
+        y_tot = chk_vert_lim(S1, S2, S3)
         if y_tot < min_lim:
             S1 -= 5
+            print(f"angle is {y_tot}! below -10 cm")
         else:
             if S1 >= 180:
                 S1 = 180
             Servo.XiaoRGEEK_SetServoAngle(servo, S1)
     elif servo == 2:
         S2 += 5
-        if S2 >= 180:
-            S2 = 180
-        Servo.XiaoRGEEK_SetServoAngle(servo, S2)
+        y_tot = chk_vert_lim(S1, S2, S3)
+        if y_tot < min_lim:
+            S1 -= 5
+            print(f"angle is {y_tot}! below -10 cm")
+        else:
+            if S2 >= 180:
+                S2 = 180
+            Servo.XiaoRGEEK_SetServoAngle(servo, S2)
     elif servo == 3:
         S3 += 5
-        y_tot = check_limit(S1, S3)
+        y_tot = chk_vert_lim(S1, S2, S3)
         if y_tot < min_lim:
             S3 -= 5
+            print(f"angle is {y_tot}! below -10 cm")
         else:
             if S3 >= 180:
                 S3 = 180
@@ -240,7 +272,7 @@ def up(servo):
         if S4 >= 140:
             S4 = 140
         Servo.XiaoRGEEK_SetServoAngle(servo, S4)
-
+'''
 def move(L_Spd = 0.6, R_Spd = 0.6):
     R_Spd *= 100
     L_Spd *= 100
@@ -275,12 +307,12 @@ def move(L_Spd = 0.6, R_Spd = 0.6):
         LeftM.ChangeDutyCycle(-L_Spd)
         GPIO.output(ENB, True)
         GPIO.output(IN3, True)
-        GPIO.output(IN4, False)
+        GPIO.output(IN4, False)'''
 
 def main():
     global Spd, S1, S2, S3, S4
 
-    dis = get_distance()
+    '''dis = get_distance()
 
     # Robot Movements
     if dis > 30:
@@ -330,10 +362,10 @@ def main():
             Spd = 0.4
         else:
             Spd -= 0.1
-            print(f"Speed = {Spd}")
+            print(f"Speed = {Spd}")'''
 
     # Servo Control
-    elif getKey('KP4'):
+    if getKey('KP4'):
         down(1)
     elif getKey('KP7'):
         up(1)
@@ -345,7 +377,7 @@ def main():
         down(3)
     elif getKey('KP3'):
         up(3)
-    elif getKey('KP_MINUS'):
+    '''elif getKey('KP_MINUS'):
         down(4)
     elif getKey('KP_PLUS'):
         up(4)
@@ -355,9 +387,9 @@ def main():
 
     elif getKey('b'):
         basicConfig(S1,S2,S3,S4)
-
+    
     elif getKey('p'):
-        grabNpour()
+        grabNpour()'''
 
 if __name__ == '__main__':
     # Initialize pygame and opens window

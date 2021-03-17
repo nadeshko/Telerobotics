@@ -25,14 +25,14 @@ def Get_Distance():
  while GPIO.input(ECHO):
   pass
  t2 = time.time()
- time.sleep(0.1)
+ time.sleep(0.3)
  return (t2-t1)*340/2*100
  
 def Send_Distance():
  dis_send = int(Get_Distance())
  #dis_sned = str("%.2f"dis_send)
  if dis_send<255:
-  print('Distane: %d cm',dis_send)
+  print(f"Distance: {dis_send}")
   
 while True:
  Send_Distance()
