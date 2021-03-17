@@ -10,7 +10,7 @@ S1 = 55
 S2 = 90
 S3 = 170
 S4 = 90
-'''
+
 def basicConfig(s1, s2, s3, s4):
     global S1, S2, S3, S4
     if s1 > 55:
@@ -115,12 +115,11 @@ def get_distance():
     while GPIO.input(ECHO):
         pass
     t2 = time()
-    #sleep(0.1)
 
     dis = int((t2-t1)*340/2*100)
     if dis < 255:
         print(f"Distance: {dis} cm")
-    return dis'''
+    return dis
 
 def chk_vert_lim(s1, s2, s3):
     '''
@@ -147,7 +146,7 @@ def chk_vert_lim(s1, s2, s3):
     y_total = max(f,g)
     #print(f" y total = {y_total}")
     return y_total
-'''
+
 def grabNpour():
     #             S1  S2  S3   S4
     # initial  : (55, 90, 170, 90)
@@ -178,7 +177,7 @@ def grabNpour():
     # releasing: (10, 90, 125, 90)
     for S4 in range(125, 89, -1):
         Servo.XiaoRGEEK_SetServoAngle(4, S4)
-    sleep(1)'''
+    sleep(1)
 
 def getKey(key):
     """
@@ -194,7 +193,7 @@ def getKey(key):
     return Pressed
 
 def down(servo):
-    global S1, S2, S3
+    global S1, S2, S3, S4
     min_lim = - 10
 
     if servo == 1:
@@ -272,7 +271,7 @@ def up(servo):
         if S4 >= 140:
             S4 = 140
         Servo.XiaoRGEEK_SetServoAngle(servo, S4)
-'''
+
 def move(L_Spd = 0.6, R_Spd = 0.6):
     R_Spd *= 100
     L_Spd *= 100
@@ -307,12 +306,12 @@ def move(L_Spd = 0.6, R_Spd = 0.6):
         LeftM.ChangeDutyCycle(-L_Spd)
         GPIO.output(ENB, True)
         GPIO.output(IN3, True)
-        GPIO.output(IN4, False)'''
+        GPIO.output(IN4, False)
 
 def main():
     global Spd, S1, S2, S3, S4
 
-    '''dis = get_distance()
+    dis = get_distance()
 
     # Robot Movements
     if dis > 30:
@@ -362,7 +361,7 @@ def main():
             Spd = 0.4
         else:
             Spd -= 0.1
-            print(f"Speed = {Spd}")'''
+            print(f"Speed = {Spd}")
 
     # Servo Control
     if getKey('KP4'):
@@ -377,7 +376,7 @@ def main():
         down(3)
     elif getKey('KP3'):
         up(3)
-    '''elif getKey('KP_MINUS'):
+    elif getKey('KP_MINUS'):
         down(4)
     elif getKey('KP_PLUS'):
         up(4)
@@ -389,7 +388,7 @@ def main():
         basicConfig(S1,S2,S3,S4)
     
     elif getKey('p'):
-        grabNpour()'''
+        grabNpour()
 
 if __name__ == '__main__':
     # Initialize pygame and opens window
