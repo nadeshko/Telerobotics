@@ -2,11 +2,12 @@ from _XiaoRGEEK_SERVO_ import XR_Servo
 from time import sleep, time
 import RPi.GPIO as GPIO
 import pygame
+import sys
 
 Spd = 0.6
 
 def get_distance():
-    sleep(0.05)
+    sleep(0.0005)
     GPIO.output(TRIG, GPIO.HIGH)
     sleep(0.000015)
     GPIO.output(TRIG, GPIO.LOW)
@@ -22,6 +23,48 @@ def get_distance():
     if dis < 255:
         print(f"Distance: {dis} cm")
     return dis
+
+def basicConfig():
+    Servo.XiaoRGEEK_SetServoAngle(1, 55)
+    Servo.XiaoRGEEK_SetServoAngle(2, 90)
+    Servo.XiaoRGEEK_SetServoAngle(3, 170)
+    Servo.XiaoRGEEK_SetServoAngle(4, 90)
+
+def grabNpour():
+    #             S1  S2  S3   S4
+    # initial  : (55, 90, 170, 90)
+    # grab_pos : (10, 90, 125, 90)
+    Servo.XiaoRGEEK_SetServoAngle(3, 125)
+    sleep(1)
+    Servo.XiaoRGEEK_SetServoAngle(1, 10)
+    sleep(1)
+    # grabbing : (10, 90, 125, 125)
+    for S4 in range (90, 125, 5):
+        Servo.XiaoRGEEK_SetServoAngle(4, S4)
+        sleep(0.75)
+    sleep(1)
+    # lifting  : (55, 90, 170, 125)
+    for S3 in range (125, 175, 5):
+        Servo.XiaoRGEEK_SetServoAngle(3, S3)
+        sleep(0.75)
+        Servo.XiaoRGEEK_SetServoAngle(1, S3-115)
+        sleep(0.75)
+    sleep(1)
+    # pouring  : (55, 0, 170, 125)
+    for S2 in range (90, -5, -10):
+        Servo.XiaoRGEEK_SetServoAngle(2, S2)
+        sleep(0.75)
+    sleep(1)
+    # return   : (55, 90, 170, 125)
+    Servo.XiaoRGEEK_SetServoAngle(2, 90)
+    sleep(1)
+    # putting  : (10, 90, 125, 90)
+    Servo.XiaoRGEEK_SetServoAngle(3, 125)
+    sleep(1)
+    Servo.XiaoRGEEK_SetServoAngle(1, 10)
+    sleep(1)
+    Servo.XiaoRGEEK_SetServoAngle(4, 90)
+    sleep(3)
 
 def getKey(key):
     """
@@ -119,18 +162,26 @@ def main():
             Spd = 1
         else:
             Spd += 0.1
-            print(Spd)
+            print(f"Speed = {Spd}")
     elif getKey('LCTRL'):
         if Spd <= 0.4:
             Spd = 0.4
         else:
             Spd -= 0.1
-            print(Spd)
+            print(f"Speed = {Spd}")
+
+    elif getKey('KP_1'):
+        #TODO: vertical angle limits
+        pass
+
+    elif getKey('g'):
+        grabNpour()
+        basicConfig()
 
 if __name__ == '__main__':
     # Initialize pygame and opens window
     pygame.init()
-    screen = pygame.display.set_mode((400, 200))
+    screen = pygame.display.set_mode((200, 200))
 
     # Set GPIO call mode as BCM
     GPIO.setmode(GPIO.BCM)
@@ -177,5 +228,11 @@ if __name__ == '__main__':
     RightM.start(0)
     LeftM.start(0)
 
-    while True:
-        main()
+    try:
+        while True:
+            main()
+
+    except KeyboardInterrupt:
+        pygame.display.quit()
+        pygame.quit()
+        sys.exit()
