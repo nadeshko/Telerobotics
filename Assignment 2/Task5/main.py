@@ -3,7 +3,7 @@ from time import sleep, time
 import RPi.GPIO as GPIO
 import pygame
 
-Spd = 0
+Spd = 0.6
 
 def get_distance():
     sleep(0.05)
@@ -36,7 +36,7 @@ def getKey(key):
     pygame.display.update()
     return Pressed
 
-def move(L_Spd = 0.5, R_Spd = 0.5):
+def move(L_Spd = 0.6, R_Spd = 0.6):
     R_Spd *= 100
     L_Spd *= 100
 
@@ -78,39 +78,39 @@ def main():
     dis = get_distance()
 
     # Robot Movements
-    if dis >= 27:
+    if dis > 34:
         if getKey('w'):
             if getKey('a'):
-                move(Spd - Spd * 0.5, Spd)
+                move(0.5, 0.85)
             elif getKey('d'):
-                move(Spd, Spd - Spd * 0.5)
+                move(0.85, 0.5)
             else:
                 move(Spd, Spd)
         elif getKey('s'):
             if getKey('a'):
-                move(-Spd + Spd * 0.5, -Spd)
+                move(-0.5, -0.85)
             elif getKey('d'):
-                move(-Spd, -Spd + Spd * 0.5)
+                move(-0.85, -0.5)
             else:
                 move(-Spd, -Spd)
         elif getKey('d'):
-            move(Spd, 0)
+            move(Spd, -Spd)
         elif getKey('a'):
-            move(0, Spd)
+            move(-Spd, Spd)
 
         else: move(0, 0)
     else:
         if getKey('s'):
             if getKey('a'):
-                move(-Spd + Spd * 0.5, -Spd)
+                move(-0.5, -0.85)
             elif getKey('d'):
-                move(-Spd, -Spd + Spd * 0.5)
+                move(-0.85, -0.5)
             else:
                 move(-Spd, -Spd)
         elif getKey('d'):
-            move(Spd, 0)
+            move(Spd, -Spd)
         elif getKey('a'):
-            move(0, Spd)
+            move(-Spd, Spd)
         else: move(0, 0)
 
     # Robot acceleration/deceleration
@@ -121,12 +121,11 @@ def main():
             Spd += 0.1
             print(Spd)
     elif getKey('LCTRL'):
-        if Spd <= 0:
-            Spd = 0
+        if Spd <= 0.4:
+            Spd = 0.4
         else:
             Spd -= 0.1
             print(Spd)
-
 
 if __name__ == '__main__':
     # Initialize pygame and opens window
