@@ -15,7 +15,7 @@ GPIO.setwarnings(False)
 Servo = XR_Servo()
 
 # Allow Camera
-cam = cv2.VideoCapture(0)
+#cam = cv2.VideoCapture(0)
 
 ## Define Ports
 ENA=13
@@ -25,18 +25,18 @@ IN2=16
 IN3=21
 IN4=26
 
-# Initial Values
+# Initial Values (for grabbing)
 x = 0
 y = 0
 Speed = 0
 rotate = 0
-S1 = 0
-S2 = 120
-S3 = 90
-S4 = 0
+S1 = 55 #10
+S2 = 90
+S3 = 170 #125
+S4 = 90
 S7 = 0
-S8 = 90
-img_counter = 0
+S8 = 80
+#img_counter = 0
 edit_img_clear = True
 Servo.XiaoRGEEK_SetServoAngle(1,S1)
 Servo.XiaoRGEEK_SetServoAngle(2,S2)
@@ -127,13 +127,13 @@ def down(servo):
         Servo.XiaoRGEEK_SetServoAngle(servo, S2)
     elif servo == 3:
         S3 -= 5
-        if S3 <= 0:
-            S3 = 0
+        if S3 <= 60:
+            S3 = 60
         Servo.XiaoRGEEK_SetServoAngle(servo, S3)
     elif servo == 4:
         S4 -= 5
-        if S4 <= 0:
-            S4 = 0
+        if S4 <= 80:
+            S4 = 80
         Servo.XiaoRGEEK_SetServoAngle(servo, S4)
     elif servo == 7:
         S7 -= 5
@@ -164,8 +164,8 @@ def up(servo):
         Servo.XiaoRGEEK_SetServoAngle(servo, S3)
     elif servo == 4:
         S4 += 5
-        if S4 >= 90:
-            S4 = 90
+        if S4 >= 140:
+            S4 = 140
         Servo.XiaoRGEEK_SetServoAngle(servo, S4)
     elif servo == 7:
         S7 += 5
@@ -181,9 +181,9 @@ def up(servo):
 if __name__ == '__main__':
     while True:
 
-        ret, frame = cam.read()
-        cv2.imshow('Camera', frame)
-
+        #ret, frame = cam.read()
+        #cv2.imshow('Camera', frame)
+        '''
         k = cv2.waitKey(1) % 256
         if k == 27:  # ESC
             print("quitting...")
@@ -236,7 +236,7 @@ if __name__ == '__main__':
                 cv2.destroyWindow("Rotated Image")
             else:
                 print('image couldnt be read! try again')
-
+        '''
         # Keyboard inputs
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -284,9 +284,9 @@ if __name__ == '__main__':
                 elif event.key == pygame.K_KP3:
                     up(3)
                 # Servo 4 Control
-                elif event.key == pygame.K_MINUS:
+                elif event.key == pygame.K_KP_MINUS:
                     down(4)
-                elif event.key == pygame.K_PLUS:
+                elif event.key == pygame.K_KP_PLUS:
                     up(4)
                 # Servo 7 Control
                 elif event.key == pygame.K_UP:
@@ -305,5 +305,5 @@ if __name__ == '__main__':
             elif event.type == pygame.KEYUP:
                 Stop()
 
-cam.release()
-cv2.destroyAllWindows()
+#cam.release()
+#cv2.destroyAllWindows()
