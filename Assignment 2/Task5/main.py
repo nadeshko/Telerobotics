@@ -21,6 +21,7 @@ def get_distance():
     dis = int((t2-t1)*340/2*100)
     if dis < 255:
         print(f"Distance: {dis} cm")
+    return dis
 
 def getKey(key):
     """
@@ -74,7 +75,7 @@ def move(R_Spd = 0.5, L_Spd = 0.5):
 def main():
     global Spd
 
-    get_distance()
+    dis = get_distance()
 
     # Robot Movements
     if getKey('w'):
@@ -113,6 +114,10 @@ def main():
             print(Spd)
 
     else:
+        move(0,0)
+
+    # Stop 2cm in front of robot arm
+    if dis < 27:
         move(0,0)
 
 if __name__ == '__main__':
