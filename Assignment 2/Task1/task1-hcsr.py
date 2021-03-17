@@ -21,6 +21,7 @@ def get_distance():
     while GPIO.input(ECHO):
         pass
     t2 = time()
+    sleep(0.5)
 
     dis = int((t2 - t1) * 340 / 2 * 100)
     if dis < 255:
