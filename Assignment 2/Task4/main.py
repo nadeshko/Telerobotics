@@ -16,7 +16,6 @@ def main():
     else:
         move(Spd, Spd)'''
 
-
 if __name__ == '__main__':
     # Set GPIO call mode as BCM
     GPIO.setmode(GPIO.BCM)
