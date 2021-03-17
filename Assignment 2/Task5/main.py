@@ -28,65 +28,98 @@ def get_distance():
         print(f"Distance: {dis} cm")
     return dis
 
-def basicConfig(S1, S2, S3, S4):
-    if S1 > 55:
-        for i in range (S1, 54, -1):
+def basicConfig(s1, s2, s3, s4):
+    global S1, S2, S3, S4
+    if s1 > 55:
+        for i in range (s1, 54, -1):
             Servo.XiaoRGEEK_SetServoAngle(1, i)
-    elif S1 < 55:
-        for i in range (S1, 56, 1):
+            S1 = i
+
+    elif s1 < 55:
+        for i in range (s1, 56, 1):
             Servo.XiaoRGEEK_SetServoAngle(1, i)
+            S1 = i
+    else:
+        pass
 
-    if S3 < 170:
-        for i in range (S3, 171, 1):
+    if s3 < 170:
+        for i in range (s3, 171, 1):
             Servo.XiaoRGEEK_SetServoAngle(3, i)
-    elif S3 > 170:
-        for i in range (S3, 169, -1):
+            S3 = i
+    elif s3 > 170:
+        for i in range (s3, 169, -1):
             Servo.XiaoRGEEK_SetServoAngle(3, i)
+            S3 = i
+    else:
+        pass
 
-    if S2 > 90:
-        for i in range (S2, 89, -1):
+    if s2 > 90:
+        for i in range (s2, 89, -1):
             Servo.XiaoRGEEK_SetServoAngle(2, i)
-    elif S2 < 90:
-        for i in range (S2, 91, 1):
+            S2 = i
+    elif s2 < 90:
+        for i in range (s2, 91, 1):
             Servo.XiaoRGEEK_SetServoAngle(2, i)
+            S2 = i
+    else:
+        pass
 
-    if S4 > 90:
-        for i in range (S4, 89, -1):
+    if s4 > 90:
+        for i in range (s4, 89, -1):
             Servo.XiaoRGEEK_SetServoAngle(4, i)
-    elif S4 < 90:
-        for i in range (S4, 91, 1):
+            S4 = i
+    elif s4 < 90:
+        for i in range (s4, 91, 1):
             Servo.XiaoRGEEK_SetServoAngle(4, i)
-    sleep(1)
+            S4 = i
+    else:
+        pass
 
-def grabConfig(S1, S2, S3, S4):
-    if S3 < 125:
-        for i in range (S3, 126, 1):
+def grabConfig(s1, s2, s3, s4):
+    global S1, S2, S3, S4
+    if s3 < 125:
+        for i in range (s3, 126, 1):
             Servo.XiaoRGEEK_SetServoAngle(3, i)
-    elif S3 > 125:
-        for i in range (S3, 124, -1):
+            S3 = i
+    elif s3 > 125:
+        for i in range (s3, 124, -1):
             Servo.XiaoRGEEK_SetServoAngle(3, i)
+            S3 = i
+    else:
+        pass
 
-    if S1 > 10:
-        for i in range (S1, 9, -1):
+    if s1 > 10:
+        for i in range (s1, 9, -1):
             Servo.XiaoRGEEK_SetServoAngle(1, i)
-    elif S1 < 10:
-        for i in range (S1, 11, 1):
+            S1 = i
+    elif s1 < 10:
+        for i in range (s1, 11, 1):
             Servo.XiaoRGEEK_SetServoAngle(1, i)
+            S1 = i
+    else:
+        pass
 
-    if S2 > 90:
-        for i in range(S2, 89, -1):
+    if s2 > 90:
+        for i in range(s2, 89, -1):
             Servo.XiaoRGEEK_SetServoAngle(2, i)
-    elif S2 < 90:
-        for i in range(S2, 91, 1):
+            S2 = i
+    elif s2 < 90:
+        for i in range(s2, 91, 1):
             Servo.XiaoRGEEK_SetServoAngle(2, i)
+            S2 = i
+    else:
+        pass
 
-    if S4 > 90:
-        for i in range(S4, 89, -1):
+    if s4 > 90:
+        for i in range(s4, 89, -1):
             Servo.XiaoRGEEK_SetServoAngle(4, i)
-    elif S4 < 90:
-        for i in range(S4, 91, 1):
+            S4 = i
+    elif s4 < 90:
+        for i in range(s4, 91, 1):
             Servo.XiaoRGEEK_SetServoAngle(4, i)
-    sleep(1)
+            S4 = i
+    else:
+        pass
 
 def grabNpour():
     #             S1  S2  S3   S4
@@ -136,7 +169,7 @@ def getKey(key):
     return Pressed
 
 def down(servo):
-    global S1, S2, S3, S4, S7, S8
+    global S1, S2, S3, S4
     if servo == 1:
         S1 -= 5
         if S1 <= 0:
@@ -159,7 +192,7 @@ def down(servo):
         Servo.XiaoRGEEK_SetServoAngle(servo, S4)
 
 def up(servo):
-    global S1, S2, S3, S4, S7, S8
+    global S1, S2, S3, S4
     if servo == 1:
         S1 += 5
         if S1 >= 180:
@@ -298,8 +331,6 @@ def main():
 
     elif getKey('p'):
         grabNpour()
-
-
 
 if __name__ == '__main__':
     # Initialize pygame and opens window
