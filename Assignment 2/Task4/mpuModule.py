@@ -15,7 +15,7 @@ class mpu():
 
     def read_mag(self):
         '''
-        Returns Magnetometer data every 0.2 sec
+        Returns Magnetometer data every 0.25 sec
         '''
         mag = self.mpu9250.readMagnet()
 
