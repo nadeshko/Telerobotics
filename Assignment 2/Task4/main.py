@@ -45,6 +45,7 @@ if __name__ == '__main__':
     RightM.start(0)
     LeftM.start(0)
 
+    #           min mx   max mx   min my  max my
     Mpu = mpu(-26.1666, 40.1818, -63.947, 4.3732)
     '''
     # MOVE 1: 90 for 0.75 second

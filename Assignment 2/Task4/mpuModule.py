@@ -19,14 +19,61 @@ class mpu():
         Returns Magnetometer data every 0.2 sec
         '''
         mag = self.mpu9250.readMagnet()
-        mx = mag['x'] + 3.4
+        '''mx = mag['x'] + 3.4
         my = mag['y'] + 8.8
         hdg = np.arctan2(-my,mx)*180/pi
         if hdg < 0:
             hdg += 360
-        print(hdg)
+        print(hdg)'''
 
-        '''acc = self.mpu9250.readAccel()
+        #heading = np.rad2deg(np.arctan2(mag['y'],mag['x']))
+        # Normalize mx and my to [-1,1]
+        #mx = ((2*mag['x'] - self.min_mx - self.max_mx) / abs((self.max_mx - self.min_mx)))
+        #my = ((2*mag['y'] - self.min_my - self.max_my) / abs((self.max_my - self.min_my)))
+        mx = 2 * ((mag['x'] - self.min_mx) / (self.max_mx - self.min_mx)) - 1
+        my = 2 * ((mag['y'] - self.min_my) / (self.max_my - self.min_my)) - 1
+
+        x = mag['x']
+        y = mag['y']
+        cntr_mx = (self.min_mx + self.max_mx) / 2
+        cntr_my = (self.min_my + self.max_my) / 2
+
+        if x < cntr_mx:
+
+
+        angle = np.rad2deg(np.arctan(x/y))
+        #angle = np.rad2deg(np.arctan(mx / my))
+        angle = round(angle,2)
+        '''
+        if mx > 0 and my > 0:
+            angle = np.rad2deg(np.arctan(mx / my))
+        elif my < 0:
+            angle = np.rad2deg(np.arctan(mx / my))
+        elif mx < 0 and my > 0:
+            angle = np.rad2deg(np.arctan(mx / my))
+        elif mx==1 and my==0:
+            angle = 90
+        elif mx==-1 and my==0:
+            angle = 270
+        
+        if mx > 0 :
+            heading = np.rad2deg(np.arctan2(mx, my))
+            print(mx)
+        elif mx < 0:
+            if my >= 0:
+                heading = np.rad2deg(np.arctan2(my, mx))
+                print(f"positive {my}")
+            elif my < 0:
+                heading = np.rad2deg(np.arctan2(my, mx))
+                print(f"negative {my}")'''
+
+        #print(f"{angle}")
+        print(f"{mag['x']} {mag['y']} {angle} degrees")
+        sleep(0.25)
+
+        #return mx, my
+
+'''acc = self.mpu9250.readAccel()
 
         x = acc['x']
         y = acc['y']
@@ -42,41 +89,3 @@ class mpu():
         print(f"az = {acc['z']}\n")
 
         print(f"Yaw = {yaw}, Roll = {roll}, Pitch = {pitch}\n")'''
-
-
-        #heading = np.rad2deg(np.arctan2(mag['y'],mag['x']))
-        # Normalize mx and my to [-1,1]
-        #mx = ((2*mag['x'] - self.min_mx - self.max_mx) / abs((self.max_mx - self.min_mx)))
-        #my = ((2*mag['y'] - self.min_my - self.max_my) / abs((self.max_my - self.min_my)))
-        #mx = 2 * ((mag['x'] - self.min_mx) / (self.max_mx - self.min_mx)) - 1
-        #my = 2 * ((mag['y'] - self.min_my) / (self.max_my - self.min_my)) - 1
-        '''
-        if mx > 0 and my > 0:
-            angle = np.rad2deg(np.arctan(mx / my))
-        elif my < 0:
-            angle = np.rad2deg(np.arctan(mx / my)) + 180
-        elif mx < 0 and my > 0:
-            angle = np.rad2deg(np.arctan(mx / my)) + 360
-        elif mx==1 and my==0:
-            angle = 90
-        elif mx==-1 and my==0:
-            angle = 270
-
-        angle = 360 - angle
-        
-        if mx > 0 :
-            heading = np.rad2deg(np.arctan2(mx, my))
-            print(mx)
-        elif mx < 0:
-            if my >= 0:
-                heading = np.rad2deg(np.arctan2(my, mx))
-                print(f"positive {my}")
-            elif my < 0:
-                heading = np.rad2deg(np.arctan2(my, mx))
-                print(f"negative {my}")'''
-
-        #print(f"{angle} {heading}")
-        #print(f"heading {angle} {mx} {my} {mag['x']} {mag['y']} {mag['z']}")
-        sleep(0.2)
-
-        #return mx, my
