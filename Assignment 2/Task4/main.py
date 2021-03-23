@@ -37,7 +37,7 @@ if __name__ == '__main__':
     #           min mx   max mx   min my  max my
     Mpu = mpu(-26.1666, 40.1818, -63.947, 4.3732)
 
-    '''# MOVE 1: 90 for 0.75 second
+    # MOVE 1: 90 for 0.75 second
     move(90,90)
     sleep(1.25)
     move(0,0) # Stops
@@ -74,14 +74,14 @@ if __name__ == '__main__':
     move(75,75)
     sleep(1.35)
     move(0, 0)
-    sleep(1)'''
-
+    sleep(1)
+    """
     try:
         while True:
             main()
 
     except KeyboardInterrupt:
-        sys.exit()
+        sys.exit()"""
 
 
 
