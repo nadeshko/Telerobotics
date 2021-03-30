@@ -1,6 +1,45 @@
 from mpuModule import mpu
 import RPi.GPIO as GPIO
-import sys
+from time import sleep
+
+def move(L_Spd = 0.6, R_Spd = 0.6):
+    """
+    Function for 360 robot movement based on keyboard presses
+    """
+    R_Spd *= 100
+    L_Spd *= 100
+
+    if R_Spd > 0:
+        RightM.ChangeDutyCycle(R_Spd)
+        GPIO.output(ENA, True)
+        GPIO.output(IN1, False)
+        GPIO.output(IN2, True)
+    elif R_Spd == 0:
+        RightM.ChangeDutyCycle(0)
+        GPIO.output(ENA, False)
+        GPIO.output(IN1, False)
+        GPIO.output(IN2, False)
+    else:
+        RightM.ChangeDutyCycle(-R_Spd)
+        GPIO.output(ENA, True)
+        GPIO.output(IN1, True)
+        GPIO.output(IN2, False)
+
+    if L_Spd > 0:
+        LeftM.ChangeDutyCycle(L_Spd)
+        GPIO.output(ENB, True)
+        GPIO.output(IN3, False)
+        GPIO.output(IN4, True)
+    elif L_Spd == 0:
+        LeftM.ChangeDutyCycle(0)
+        GPIO.output(ENB, False)
+        GPIO.output(IN3, False)
+        GPIO.output(IN4, False)
+    else:
+        LeftM.ChangeDutyCycle(-L_Spd)
+        GPIO.output(ENB, True)
+        GPIO.output(IN3, True)
+        GPIO.output(IN4, False)
 
 def main():
     Mpu.read_mag()
@@ -9,6 +48,8 @@ if __name__ == '__main__':
     # Set GPIO call mode as BCM
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
+
+    Err = False
 
     ## Define Ports
     ENA = 13
@@ -34,68 +75,47 @@ if __name__ == '__main__':
     RightM.start(0)
     LeftM.start(0)
 
-    #           min mx   max mx   min my  max my
-    Mpu = mpu(-26.1666, 40.1818, -63.947, 4.3732)
+    Mpu = mpu()
 
-    # MOVE 1: 90 for 0.75 second
-    move(90,90)
-    sleep(1.25)
-    move(0,0) # Stops
-    sleep(1)
-    angle = Mpu.read_mag()
-    print(angle)
-    if angle > 155:
-        err = angle - 155
-        print(f"error = {err}")
-        move(60 + abs(err)*0.01, 60 - abs(err) * 0.9)
-    elif angle < 155:
-        err = angle - 155
-        print(f"error = {err}")
-        move(60 - abs(err) * 0.75, 60 + abs(err)*0.01)
-    sleep(1)
-
-    # MOVE 2: 40 for 2.5 sec
-    move(40,40)
+    move(0.5, 0.5)
     sleep(2)
-    move(0,0)
-    sleep(1)
-    angle = Mpu.read_mag()
-    print(angle)
-    if angle > 155:
-        err = angle - 155
-        print(f"error = {err}")
-        move(60 + abs(err)*0.01, 60 - abs(err) * 0.9)
-    elif angle < 155:
-        err = angle - 155
-        print(f"error = {err}")
-        move(60 - abs(err) * 0.75, 60 + abs(err)*0.01)
-    sleep(1)
-
-    move(75,75)
-    sleep(1.35)
     move(0, 0)
     sleep(1)
-    """
-    try:
-        while True:
-            main()
+    angle = Mpu.read_mag()
+    while angle > 250 or angle < 240:
+        angle = Mpu.read_mag()
+        move(0.5, -0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
 
-    except KeyboardInterrupt:
-        sys.exit()"""
+    move(0.5, 0.5)
+    sleep(2)
+    move(0, 0)
+    sleep(1)
+    angle = Mpu.read_mag()
+    while angle >325 or angle < 300:
+        angle = Mpu.read_mag()
+        move(0.5, -0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
 
+    move(0.5, 0.5)
+    sleep(2)
+    move(0, 0)
+    sleep(1)
+    angle = Mpu.read_mag()
+    while angle > 188 or angle < 160:
+        angle = Mpu.read_mag()
+        move(0.5, -0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
 
+    move(0.5, 0.5)
+    sleep(2)
+    move(0, 0)
+    sleep(1)
+    angle = Mpu.read_mag()
 
-
-
-##################################################### Real-time Turning:
-    #(ITS TURNING RIGHT, MUST TURN LEFT)
-    '''if angle > 155:
-        err = angle - 155
-        print(f"error = {err}")
-        move(Spd + abs(err) * 0.6, Spd - abs(err) * 0.11)
-    elif angle < 155:
-        err = angle - 155
-        print(f"error = {err}")
-        move(Spd - abs(err) * 0.11, Spd + abs(err) * 0.6)
-    else:
-        move(Spd, Spd)'''
