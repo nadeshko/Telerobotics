@@ -42,39 +42,43 @@ def move(L_Spd = 0.6, R_Spd = 0.6):
         GPIO.output(IN4, False)
 
 def straight():
+    ### STRAIGHT START ###
     move(0.5, 0.5)
     sleep(2)
     move(0, 0)
     sleep(1)
-    angle = Mpu.read_mag()
-    while angle > 250: # TODO: change this
+    a1 = Mpu.read_mag()
+    while a1 > 250: # TODO: change this
         move(0.5, -0.5)
         sleep(0.15)
         move(0, 0)
         sleep(1)
-        angle = Mpu.read_mag()
-    while angle < 200: # TODO: change this
+        a1 = Mpu.read_mag()
+    while a1 < 200: # TODO: change this
         move(-0.5, +0.5)
         sleep(0.15)
         move(0, 0)
         sleep(1)
-        angle = Mpu.read_mag()
+        a1 = Mpu.read_mag()
 
     move(0.95, 0.95)
     sleep(0.7)
     move(0, 0)
     sleep(1)
-    angle = Mpu.read_mag()
+    a2 = Mpu.read_mag()
 
+
+    ### STRAIGHT END ###
 
 def square():
+    ### SQUARE START ###
     move(0.5, 0.5)
     sleep(2)
     move(0, 0)
     sleep(1)
-    angle = Mpu.read_mag()
-    while angle > 250 or angle < 240:
-        angle = Mpu.read_mag()
+    a1 = Mpu.read_mag()
+    while a1 > 250 or a1 < 240:
+        a1 = Mpu.read_mag()
         move(0.5, -0.5)
         sleep(0.15)
         move(0, 0)
@@ -84,9 +88,9 @@ def square():
     sleep(2)
     move(0, 0)
     sleep(1)
-    angle = Mpu.read_mag()
-    while angle >325 or angle < 300:
-        angle = Mpu.read_mag()
+    a2 = Mpu.read_mag()
+    while a2 >325 or a2 < 300:
+        a2 = Mpu.read_mag()
         move(0.5, -0.5)
         sleep(0.15)
         move(0, 0)
@@ -96,9 +100,9 @@ def square():
     sleep(2)
     move(0, 0)
     sleep(1)
-    angle = Mpu.read_mag()
-    while angle > 188 or angle < 160:
-        angle = Mpu.read_mag()
+    a3 = Mpu.read_mag()
+    while a3 > 188 or a3 < 160:
+        a3 = Mpu.read_mag()
         move(0.5, -0.5)
         sleep(0.15)
         move(0, 0)
@@ -108,10 +112,12 @@ def square():
     sleep(2)
     move(0, 0)
     sleep(1)
-    angle = Mpu.read_mag()
+    ### SQUARE END ###
 
 def circle():
+    ### CIRCLE START ###
     pass
+    ### CIRCLE END ###
 
 if __name__ == '__main__':
     # Set GPIO call mode as BCM
