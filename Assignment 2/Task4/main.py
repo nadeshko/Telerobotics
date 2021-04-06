@@ -42,7 +42,30 @@ def move(L_Spd = 0.6, R_Spd = 0.6):
         GPIO.output(IN4, False)
 
 def straight():
-    pass
+    move(0.5, 0.5)
+    sleep(2)
+    move(0, 0)
+    sleep(1)
+    angle = Mpu.read_mag()
+    while angle > 250: # TODO: change this
+        move(0.5, -0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
+        angle = Mpu.read_mag()
+    while angle < 200: # TODO: change this
+        move(-0.5, +0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
+        angle = Mpu.read_mag()
+
+    move(0.95, 0.95)
+    sleep(0.7)
+    move(0, 0)
+    sleep(1)
+    angle = Mpu.read_mag()
+
 
 def square():
     move(0.5, 0.5)
