@@ -44,25 +44,25 @@ def move(L_Spd = 0.6, R_Spd = 0.6):
 def straight():
     ### STRAIGHT START ###
     move(0.5, 0.5)
-    sleep(2)
+    sleep(1.5)
     move(0, 0)
     sleep(1)
     a1 = Mpu.read_mag()
-    while a1 > 250: # TODO: change this
+    while a1 > 160: # TODO: change this
         move(0.5, -0.5)
         sleep(0.15)
         move(0, 0)
         sleep(1)
         a1 = Mpu.read_mag()
-    while a1 < 200: # TODO: change this
+    while a1 < 155: # TODO: change this
         move(-0.5, +0.5)
         sleep(0.15)
         move(0, 0)
         sleep(1)
         a1 = Mpu.read_mag()
 
-    move(0.95, 0.95)
-    sleep(0.7)
+    move(0.8, 0.8)
+    sleep(0.5)
     move(0, 0)
     sleep(1)
     a2 = Mpu.read_mag()
@@ -116,7 +116,67 @@ def square():
 
 def circle():
     ### CIRCLE START ###
-    pass
+    #starting point
+    move(0.6, 0.3)
+    sleep(2.15)
+    move(0, 0)
+    sleep(1)
+    a1 = Mpu.read_mag()
+    #first check point
+    while a1 > 325:
+        move(0.5, -0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
+        a1 = Mpu.read_mag()
+    while a1 < 310:
+        move(-0.5, +0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
+        a1 = Mpu.read_mag()
+    #altered -> move
+    move(0.6, 0.3)
+    sleep(2.15)
+    move(0, 0)
+    sleep(1)
+    a2 = Mpu.read_mag()
+    #second check point
+    while a1 > 290:
+        move(0.5, -0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
+        a1 = Mpu.read_mag()
+    while a1 < 280:
+        move(-0.5, +0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
+        a1 = Mpu.read_mag()
+    #altered -> move
+    move(0.6, 0.3)
+    sleep(2.15)
+    move(0, 0)
+    sleep(1)
+    a3 = Mpu.read_mag()
+    while a1 > 180:
+        move(0.5, -0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
+        a1 = Mpu.read_mag()
+    while a1 < 170:
+        move(-0.5, +0.5)
+        sleep(0.15)
+        move(0, 0)
+        sleep(1)
+        a1 = Mpu.read_mag()
+
+    move(0.6, 0.3)
+    sleep(2.15)
+    move(0, 0)
+    sleep(1)
     ### CIRCLE END ###
 
 if __name__ == '__main__':
@@ -154,5 +214,5 @@ if __name__ == '__main__':
 
     # Comment and uncomment these to change functions
     #straight()
-    square()
-    #circle()
+    #square()
+    circle()
