@@ -48,13 +48,13 @@ def straight():
     move(0, 0)
     sleep(1)
     a1 = Mpu.read_mag()
-    while a1 > 160: # TODO: change this
+    while a1 > 160:
         move(0.5, -0.5)
         sleep(0.15)
         move(0, 0)
         sleep(1)
         a1 = Mpu.read_mag()
-    while a1 < 155: # TODO: change this
+    while a1 < 155:
         move(-0.5, +0.5)
         sleep(0.15)
         move(0, 0)
@@ -65,9 +65,6 @@ def straight():
     sleep(0.5)
     move(0, 0)
     sleep(1)
-    a2 = Mpu.read_mag()
-
-
     ### STRAIGHT END ###
 
 def square():
