@@ -160,7 +160,7 @@ def chk_vert_lim(s1, s2, s3):
     else:
         f = m * sin(radians(s1 - 55)) + nh * sin(radians(s1 - s3 + 99))
     g = m * sin(radians(s1 - 55)) + nc * sin(radians(s1 - s3 + 25))
-    y_total = max(f,g)
+    y_total = min(f,g) # Gets smallest number between f & g
     #print(f" y total = {y_total}") # DEBUG
     return y_total
 
