@@ -1,9 +1,10 @@
+from sklearn.model_selection import train_test_split
+from tensorflow.keras import Sequential, layers
+from skimage import color
+from pathlib import Path
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
-from sklearn.model_selection import train_test_split
-from skimage import color
-from pathlib import Path
 
 def plot():
     # color map for grayscale pictures
@@ -63,16 +64,25 @@ train_img, test_img, train_labels, test_labels = train_test_split(images, labels
 
 ### Building the Sequential Model
 # Setting up layers
-model = tf.keras.Sequential([
-    tf.keras.layers.Flatten(input_shape = (32, 32)), # Tranforms format of images from 2D -> 1D array
-    tf.keras.Dense(128, activation='relu'), # 128 nodes
-    tf.keras.Dense(num_classes)]) # last layer
+model = Sequential([
+    layers.Flatten(input_shape = (32, 32), name = 'input'), # Tranforms format of images from 2D -> 1D array
+    layers.Dense(1024, activation='relu', name = 'layer1'), # 1024 nodes
+    layers.Dense(512, activation='relu', name = 'layer2'), # 512 nodes
+    layers.Dense(256, activation='relu', name = 'layer3'), # 256 nodes
+    layers.Dense(128, activation='relu', name = 'layer4'), # 128 nodes
+    layers.Dense(num_classes, name = "output")]) # last layer
 # Compiling Model
 model.compile(
-    optimizer = 'adam',
-    loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True),
-    metrics = ['accuracy'])
-# Model Summary
+    optimizer = 'adam', # how model is updated based on data and loss function
+    loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True), # measures model accuracy
+    metrics = ['accuracy']) # monitor training and testing steps
+# Training model
+model.fit(train_img, train_labels, epochs = 10)
+# Evaluation accuracy
+test_loss, test_acc = model.evaluate(test_img, test_labels, verbose = 2)
+print(f'\nTest Accuracy: {test_acc}')
+
+# Model Summary for debugs
 model.summary()
 
 
