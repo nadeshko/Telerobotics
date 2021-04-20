@@ -76,14 +76,23 @@ model.compile(
     optimizer = 'adam', # how model is updated based on data and loss function
     loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True), # measures model accuracy
     metrics = ['accuracy']) # monitor training and testing steps
+# Model Summary
+#model.summary() # DEBUG
+
 # Training model
-model.fit(train_img, train_labels, epochs = 10)
-# Evaluation accuracy
+history = model.fit(train_img, train_labels, epochs = 10)
+
+# Evaluate accuracy
 test_loss, test_acc = model.evaluate(test_img, test_labels, verbose = 2)
 print(f'\nTest Accuracy: {test_acc}')
 
-# Model Summary for debugs
-model.summary()
+# Making predictions
+probability_model = Sequential([model, layers.Softmax()])
+predictions = probability_model.predict(test_img)
+print(np.argmax(predictions[0]))
+
+print(test_labels[0])
+
 
 
 
