@@ -1,10 +1,9 @@
 Class,Name
-0,Speed limit (50km/h)
-1,Speed limit (60km/h)
+0,Speed limit (30km/h)
+1,Speed limit (50km/h)
 2,Speed limit (70km/h)
 3,Speed limit (80km/h)
 4,Speed limit (100km/h)
-5,Stop
-6,Turn right ahead
-7,Turn left ahead
-8,Ahead only
+5,Turn right ahead
+6,Turn left ahead
+7,Straight Ahead
