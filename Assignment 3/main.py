@@ -66,6 +66,10 @@ img_height = 32
 img_width = 32
 batch_size = 200
 
+train_ratio = 0.75
+validation_ratio = 0.15
+test_ratio = 0.10
+
 class_names = ['30km/hr','50km/hr','70km/hr', '80km/hr','100km/hr', 'Stop', 'Turn Right',
                'Turn Left', 'Straight']
 
@@ -84,46 +88,36 @@ for image_batch, labels_batch in dataset:
     images = image_batch.numpy().astype("uint8")
     labels = labels_batch.numpy()
     break
-"""
-datagen = ImageDataGenerator(
-    rotation_range = 40,
-    width_shift_range = 0.2,
-    height_shift_range = 0.2,
-    shear_range = 0.2,
-    zoom_range = 0.2,
-    horizontal_flip = True,
-    fill_mode = 'nearest',
-    channel_shift_range = 10.
-)
-
-img = np.expand_dims(images[0], 0)
-aug_iter = datagen.flow(img)
-augmented_images = [next(aug_iter)[0].astype(np.uint8) for i in range(10)]"""
-
-data_augmentation = tf.keras.Sequential([
-    preprocessing.RandomRotation(0.2),
-    preprocessing.RandomZoom(0.2),
-])
 
 # Convert images to grayscale and normalizing to [0,1]
 images = color.rgb2gray(images) / 255.0
 images = np.expand_dims(images, 3)
 print(images.shape)
-# Splitting data into training(0.8) and test(0.2) data's
-train_img, test_img, train_labels, test_labels = train_test_split(images, labels, test_size = 0.2)
-
-#print(train_img.shape)
-
+# Splitting data into training(0.75), validation(0.15), and test(0.1) data sets
+train_img, test_img, train_labels, test_labels = train_test_split(images, labels,
+                                                                  test_size = 1 - train_ratio)
+val_img, test_img, val_labels, test_labels = train_test_split(test_img, test_labels,
+                                                              test_size = test_ratio / (test_ratio + validation_ratio))
 ### Building the Sequential Model
+# Data Augmentation Preprocessing
+data_augmentation = tf.keras.Sequential([
+    preprocessing.RandomRotation(0.4),
+    preprocessing.RandomZoom(0.4),
+    preprocessing.RandomTranslation(0.1, 0.1)])
+
 # Setting up layers
 model = Sequential([
     # Dense: output = activation(dot(input, kernel "W matrix") + bias)
     data_augmentation,
     layers.Flatten(input_shape = (32, 32), name = 'Input'),  # Tranforms format of images from 2D->1D array
     layers.Dense(1024, activation = 'relu', name = 'Layer1'),# 1024 nodes
+    layers.Dropout(0.4),
     layers.Dense(512, activation = 'relu', name = 'Layer2'), # 512 nodes
+    layers.Dropout(0.2),
     layers.Dense(256, activation = 'relu', name = 'Layer3'), # 256 nodes
+    layers.Dropout(0.2),
     layers.Dense(128, activation = 'relu', name = 'Layer4'), # 128 nodes
+    layers.Dropout(0.1),
     layers.Dense(num_classes, name = "Output")]) # last layer (classes options)
 # Compiling Model
 model.compile(
@@ -135,7 +129,7 @@ model.compile(
 epochs = 100
 #history = model.fit(train_img, train_labels, batch_size = 200, epochs = epochs) #
 history = model.fit(train_img, train_labels,
-                    validation_data=(test_img, test_labels),
+                    validation_data=(val_img, val_labels),
                     batch_size = batch_size,
                     epochs = epochs)
 
