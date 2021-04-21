@@ -93,9 +93,6 @@ images = images / 255.0
 # Splitting data into training(0.8) and test(0.2) data's
 train_img, test_img, train_labels, test_labels = train_test_split(images, labels, test_size = 0.2)
 
-
-
-
 ### Building the Sequential Model
 # Setting up layers
 model = Sequential([
