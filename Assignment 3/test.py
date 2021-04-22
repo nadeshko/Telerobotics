@@ -135,12 +135,14 @@ history = model.fit(train_img, train_labels,
                     epochs=epochs,
                     verbose=2)
 
-# Evaluate accuracy and score
+# Evaluate accuracy
 test_loss, test_acc = model.evaluate(test_img, test_labels, verbose=2)
 print(f'\nTest Accuracy: {test_acc}')
 
-# Making predictions
-#probability_model = Sequential([model, layers.Softmax()])
+# Training Plot
+plot_graph()
+
+### Making predictions ###
 predictions = model.predict(test_img) # array of numbers representing its confidence for each class
 
 # Verifying predictions using test images and prediction arrays
@@ -158,15 +160,16 @@ plt.tight_layout()
 # Model Summary
 model.summary() # DEBUG
 
-# DEBUGGING MODELS
-plot_graph()
-
 img = load_img('seven.jpg', target_size=(img_height, img_width))
 img = np.expand_dims(img_to_array(img), 0)
 predictions_single = model.predict(img)
-score = tf.nn.softmax(predictions_single[0])
 plt.figure()
 plot_value_array(1, predictions_single[0], test_labels)
 _ = plt.xticks(range(9), class_names, rotation = 45)
+print(f"{100*np.max(predictions_single[0]):2.0f}% confidence")
 
+# show all plots
 plt.show()
+
+# Saving Model
+model.save('saved_model/CNN_model')
