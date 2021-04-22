@@ -1,4 +1,4 @@
-from tensorflow.keras.preprocessing.image import load_img, img_to_array, ImageDataGenerator
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from tensorflow.keras.layers.experimental import preprocessing
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential, layers
@@ -109,14 +109,14 @@ model = Sequential([
     data_augmentation,
     layers.Conv2D(32, 3, activation='relu'), # 30 30 (32)
     layers.Conv2D(32, 3, activation='relu'), # 28 28 (32)
-    layers.MaxPooling2D((2, 2)), # 14 14 (32)
+    layers.MaxPooling2D((2, 2)),             # 14 14 (32)
     layers.Dropout(0.25),
     layers.Conv2D(64, 3, activation='relu'), # 12 12 (64)
     layers.Conv2D(64, 3, activation='relu'), # 10 10 (64)
-    layers.MaxPooling2D((2, 2)), # 5 5 (64)
+    layers.MaxPooling2D((2, 2)),             # 5 5 (64)
     layers.Dropout(0.25),
-    layers.Flatten(), # 1600
-    layers.Dense(800, activation = 'relu'), # 1600 -> 800
+    layers.Flatten(),                        # 1600
+    layers.Dense(800, activation = 'relu'),  # 1600 -> 800
     layers.Dropout(0.5),
     layers.Dense(num_classes, activation='softmax',name="Output")]) # classes options
 
