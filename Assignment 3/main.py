@@ -64,7 +64,7 @@ num_classes = 9
 num_images = 11429
 img_height = 32
 img_width = 32
-batch_size = 200
+batch_size = 50
 
 train_ratio = 0.75
 validation_ratio = 0.15
@@ -92,7 +92,6 @@ for image_batch, labels_batch in dataset:
 # Convert images to grayscale and normalizing to [0,1]
 images = color.rgb2gray(images) / 255.0
 images = np.expand_dims(images, 3)
-print(images.shape)
 # Splitting data into training(0.75), validation(0.15), and test(0.1) data sets
 train_img, test_img, train_labels, test_labels = train_test_split(images, labels,
                                                                   test_size = 1 - train_ratio)
@@ -101,9 +100,10 @@ val_img, test_img, val_labels, test_labels = train_test_split(test_img, test_lab
 ### Building the Sequential Model
 # Data Augmentation Preprocessing
 data_augmentation = tf.keras.Sequential([
-    preprocessing.RandomRotation(0.4),
-    preprocessing.RandomZoom(0.4),
-    preprocessing.RandomTranslation(0.1, 0.1)])
+    preprocessing.RandomRotation(0.1),
+    preprocessing.RandomZoom(0.3),
+    #preprocessing.RandomTranslation(0.1, 0.1)
+    ])
 
 # Setting up layers
 model = Sequential([
@@ -111,14 +111,14 @@ model = Sequential([
     data_augmentation,
     layers.Flatten(input_shape = (32, 32), name = 'Input'),  # Tranforms format of images from 2D->1D array
     layers.Dense(1024, activation = 'relu', name = 'Layer1'),# 1024 nodes
-    layers.Dropout(0.4),
+    layers.Dropout(0.3),
     layers.Dense(512, activation = 'relu', name = 'Layer2'), # 512 nodes
     layers.Dropout(0.2),
     layers.Dense(256, activation = 'relu', name = 'Layer3'), # 256 nodes
     layers.Dropout(0.2),
     layers.Dense(128, activation = 'relu', name = 'Layer4'), # 128 nodes
-    layers.Dropout(0.1),
-    layers.Dense(num_classes, name = "Output")]) # last layer (classes options)
+    layers.Dropout(0.2),
+    layers.Dense(num_classes, activation = 'sigmoid',name = "Output")]) # last layer (classes options)
 # Compiling Model
 model.compile(
     optimizer = 'adam', # how model is updated based on data and loss function
@@ -126,7 +126,7 @@ model.compile(
     metrics = ['accuracy']) # monitor training and testing steps
 
 # Training model
-epochs = 100
+epochs = 50
 #history = model.fit(train_img, train_labels, batch_size = 200, epochs = epochs) #
 history = model.fit(train_img, train_labels,
                     validation_data=(val_img, val_labels),
@@ -134,7 +134,7 @@ history = model.fit(train_img, train_labels,
                     epochs = epochs)
 
 # Evaluate accuracy and score
-test_loss, test_acc = model.evaluate(test_img, test_labels, verbose = 2)
+test_loss, test_acc = model.evaluate(test_img, test_labels)
 print(f'\nTest Accuracy: {test_acc}')
 
 # Making predictions
@@ -142,7 +142,6 @@ probability_model = Sequential([model, layers.Softmax()])
 predictions = probability_model.predict(test_img) # array of numbers representing its confidence for each class
 
 # Verifying predictions using test images and prediction arrays
-score = []
 num_rows = 5
 num_cols = 3
 num_images = num_rows*num_cols
