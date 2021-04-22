@@ -66,11 +66,11 @@ num_classes = 9
 num_images = 11429
 img_height = 32
 img_width = 32
-batch_size = 50
+batch_size = 100
 
 train_ratio = 0.75
 validation_ratio = 0.15
-test_ratio = 0.10
+test_ratio = 0.1
 
 class_names = ['30km/hr','50km/hr','70km/hr', '80km/hr','100km/hr', 'Stop', 'Turn Right',
                'Turn Left', 'Straight']
@@ -80,7 +80,7 @@ data_dir = Path('Traffic Data')
 # Importing images and labels into dataset
 dataset = tf.keras.preprocessing.image_dataset_from_directory(
     data_dir,
-    seed = 124,
+    seed = 123,
     image_size = (img_height, img_width),
     batch_size = num_images)
 
@@ -101,19 +101,24 @@ val_img, test_img, val_labels, test_labels = train_test_split(
     test_img, test_labels, test_size = test_ratio / (test_ratio + validation_ratio))
 
 data_augmentation = Sequential([
-    layers.experimental.preprocessing.RandomRotation(0.3, input_shape=(32, 32, 3)),
-    layers.experimental.preprocessing.RandomZoom(0.3)])
+    preprocessing.RandomFlip('horizontal'),
+    preprocessing.RandomRotation(0.1, input_shape=(32, 32, 3)),
+    preprocessing.RandomZoom(0.1)])
 
 model = Sequential([
     data_augmentation,
-    layers.Conv2D(32, 3, activation='relu', padding='same'),
-    layers.MaxPooling2D((2, 2), strides=2, name='MaxPooling1'),
-    layers.Conv2D(64, 3, activation='relu', padding='same'),
-    layers.MaxPooling2D((2, 2), strides=2, name='MaxPooling2'),
-    layers.Conv2D(64, 3, activation='relu', padding='same'),
-    layers.Dropout(0.2),
+    layers.Conv2D(32, 3, activation='relu'), # 30 30 (32)
+    layers.Conv2D(32, 3, activation='relu'), # 28 28 (32)
+    layers.MaxPooling2D((2, 2)), # 14 14 (32)
+    layers.Dropout(0.25),
+    layers.Conv2D(64, 3, activation='relu'), # 12 12 (64)
+    layers.Conv2D(64, 3, activation='relu'), # 10 10 (64)
+    layers.MaxPooling2D((2, 2)), # 5 5 (64)
+    #layers.Conv2D(64, 3, activation='relu'), # 10 10 (64)
+    layers.Dropout(0.25),
     layers.Flatten(),
-    layers.Dense(128, activation = 'relu', name = 'Layer'), # 128 nodes#
+    layers.Dense(800, activation = 'relu'), # 128 nodes#
+    layers.Dropout(0.5),
     layers.Dense(num_classes, activation='softmax',name="Output")]) # last layer (classes options)
 
 # Compiling Model
@@ -123,7 +128,7 @@ model.compile(
     metrics = ['accuracy']) # monitor training and testing steps
 
 # Training model
-epochs = 10
+epochs = 20
 #history = model.fit(train_img, train_labels, batch_size = 200, epochs = epochs) #
 history = model.fit(train_img, train_labels,
                     validation_data=(val_img, val_labels),
@@ -157,13 +162,8 @@ model.summary() # DEBUG
 # DEBUGGING MODELS
 plot_graph()
 
-
-#img = load_img('stop.jpg', target_size=(img_height, img_width))
-#img = np.expand_dims(img_to_array(img), 0)
-#print(img.shape)
-img = np.expand_dims(test_img[22], 0)
-plt.figure()
-plt.imshow(test_img[22])
+img = load_img('seven.jpg', target_size=(img_height, img_width))
+img = np.expand_dims(img_to_array(img), 0)
 predictions_single = model.predict(img)
 score = tf.nn.softmax(predictions_single[0])
 plt.figure()
@@ -171,12 +171,3 @@ plot_value_array(1, predictions_single[0], test_labels)
 _ = plt.xticks(range(9), class_names, rotation = 45)
 
 plt.show()
-"""
-# Using trained model to test an image
-img = tf.image.resize(img_to_array(load_img('stop.jpg')), (32,32))
-img = np.expand_dims(img, 0)
-print(img.shape)
-predictions_single = model.predict(img)
-plot_value_array(1, predictions_single[0], test_labels)
-_ = plt.xticks(range(9), class_names, rotation = 45)
-plt.show()"""
