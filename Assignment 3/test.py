@@ -114,12 +114,11 @@ model = Sequential([
     layers.Conv2D(64, 3, activation='relu'), # 12 12 (64)
     layers.Conv2D(64, 3, activation='relu'), # 10 10 (64)
     layers.MaxPooling2D((2, 2)), # 5 5 (64)
-    #layers.Conv2D(64, 3, activation='relu'), # 10 10 (64)
     layers.Dropout(0.25),
-    layers.Flatten(),
-    layers.Dense(800, activation = 'relu'), # 128 nodes#
+    layers.Flatten(), # 1600
+    layers.Dense(800, activation = 'relu'), # 1600 -> 800
     layers.Dropout(0.5),
-    layers.Dense(num_classes, activation='softmax',name="Output")]) # last layer (classes options)
+    layers.Dense(num_classes, activation='softmax',name="Output")]) # classes options
 
 # Compiling Model
 model.compile(
