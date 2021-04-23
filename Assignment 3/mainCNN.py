@@ -1,40 +1,37 @@
-from tensorflow.keras.preprocessing.image import load_img, img_to_array, ImageDataGenerator
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from tensorflow.keras.layers.experimental import preprocessing
+from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential, layers
+from skimage import color
 from pathlib import Path
+import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 
-def get_ds():
-    train_ds = tf.keras.preprocessing.image_dataset_from_directory(
-        data_dir,
-        validation_split=1 - train_ratio,
-        subset="training",
-        seed=123,
-        image_size=(img_height, img_width),
-        batch_size=batch_size
-    )
+def plot_graph():
+    acc = history.history['accuracy']
+    val_acc = history.history['val_accuracy']
 
-    val_ds = tf.keras.preprocessing.image_dataset_from_directory(
-        data_dir,
-        validation_split=validation_ratio,
-        subset="validation",
-        seed=123,
-        image_size=(img_height, img_width),
-        batch_size=batch_size
-    )
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
 
-    test_ds = tf.keras.preprocessing.image_dataset_from_directory(
-        data_dir,
-        validation_split=test_ratio,
-        subset="validation",
-        seed=123,
-        image_size=(img_height, img_width),
-        batch_size=batch_size
-    )
+    epochs_range = range(epochs)
 
-    return train_ds, val_ds, test_ds
+    plt.figure(figsize=(8, 8))
+    plt.subplot(2, 1, 1)
+    plt.plot(epochs_range, acc, label='Training Accuracy')
+    plt.plot(epochs_range, val_acc, label='Validation Accuracy')
+    plt.legend(loc='lower right')
+    plt.xlabel('Epoch')
+    plt.title('Training and Validation Accuracy')
+
+    plt.subplot(2, 1, 2)
+    plt.plot(epochs_range, loss, label='Training Loss')
+    plt.plot(epochs_range, val_loss, label='Validation Loss')
+    plt.legend(loc='upper right')
+    plt.xlabel('Epoch')
+    plt.title('Training and Validation Loss')
 
 def plot_image(i, predictions_array, true_label, img):
     true_label, img = true_label[i], img[i]
@@ -43,7 +40,7 @@ def plot_image(i, predictions_array, true_label, img):
     plt.grid(False)
     plt.xticks([])
     plt.yticks([])
-    plt.imshow((img*255).astype(np.uint8))
+    plt.imshow(img, cmap=plt.cm.binary)
 
     if predicted_label == true_label:
         color = 'blue'
@@ -73,68 +70,106 @@ batch_size = 100
 
 train_ratio = 0.75
 validation_ratio = 0.15
-test_ratio = 0.10
+test_ratio = 0.1
 
-data_dir = Path('Traffic Data')
-
-# Import images and labels to datasets
-train_ds, val_ds, test_ds = get_ds()
-labels = train_ds.class_names
 class_names = ['30km/hr','50km/hr','70km/hr', '80km/hr','100km/hr', 'Stop', 'Turn Right',
                'Turn Left', 'Straight']
 
-# Resize and Rescale model
-resize_N_rescale = Sequential([
-    preprocessing.Rescaling(img_height,img_width),
-    preprocessing.Rescaling(1./255)])
+data_dir = Path('Traffic Data')
 
-# Creating the model
+# Importing images and labels into dataset
+dataset = tf.keras.preprocessing.image_dataset_from_directory(
+    data_dir,
+    seed = 123,
+    image_size = (img_height, img_width),
+    batch_size = num_images)
+
+# moving images & labels to n-dimension array
+images, labels = [], []
+for image_batch, labels_batch in dataset:
+    images = image_batch.numpy().astype("uint8")
+    labels = labels_batch.numpy()
+    break
+
+# Convert images to grayscale and normalizing to [0,1]
+images = images / 255.0
+
+# Splitting data into training(0.75), validation(0.15), and test(0.1) data sets
+train_img, test_img, train_labels, test_labels = train_test_split(
+    images, labels, test_size = 1 - train_ratio)
+val_img, test_img, val_labels, test_labels = train_test_split(
+    test_img, test_labels, test_size = test_ratio / (test_ratio + validation_ratio))
+
+data_augmentation = Sequential([
+    preprocessing.RandomFlip('horizontal'),
+    preprocessing.RandomRotation(0.1, input_shape=(32, 32, 3)),
+    preprocessing.RandomZoom(0.1)])
+
 model = Sequential([
-    resize_N_rescale,
-    layers.Conv2D(32, (2, 2), activation='relu', input_shape=(32, 32, 3)),
-    layers.MaxPooling2D(pool_size=(2, 2)),
-    layers.Conv2D(64, (2, 2), activation='relu', padding='same'),
-    layers.MaxPooling2D(pool_size=(2, 2)),
-    layers.Conv2D(64, (2, 2), activation='relu', padding='same'),
-    layers.Dense(128, activation = 'relu', name = 'Layer2'), # 128 nodes
-    layers.Dense(num_classes, activation='softmax')
-])
+    data_augmentation,
+    layers.Conv2D(32, 3, activation='relu'), # 30 30 (32)
+    layers.Conv2D(32, 3, activation='relu'), # 28 28 (32)
+    layers.MaxPooling2D((2, 2)),             # 14 14 (32)
+    layers.Dropout(0.25),
+    layers.Conv2D(64, 3, activation='relu'), # 12 12 (64)
+    layers.Conv2D(64, 3, activation='relu'), # 10 10 (64)
+    layers.MaxPooling2D((2, 2)),             # 5 5 (64)
+    layers.Dropout(0.25),
+    layers.Flatten(),                        # 1600
+    layers.Dense(800, activation = 'relu'),  # 1600 -> 800
+    layers.Dropout(0.5),
+    layers.Dense(num_classes, activation='softmax',name="Output")]) # classes options
 
+# Compiling Model
 model.compile(
     optimizer = 'adam', # how model is updated based on data and loss function
-    loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True), # measures model accuracy
+    loss = tf.keras.losses.SparseCategoricalCrossentropy(), # measures model accuracy
     metrics = ['accuracy']) # monitor training and testing steps
 
-epochs = 10
-history = model.fit(train_ds,
-                    validation_data=val_ds,
-                    batch_size = batch_size,
-                    epochs = epochs)
+# Training model
+epochs = 20
+#history = model.fit(train_img, train_labels, batch_size = 200, epochs = epochs) #
+history = model.fit(train_img, train_labels,
+                    validation_data=(val_img, val_labels),
+                    batch_size=batch_size,
+                    epochs=epochs,
+                    verbose=2)
 
-test_loss, test_acc = model.evaluate(test_ds)
+# Evaluate accuracy
+test_loss, test_acc = model.evaluate(test_img, test_labels, verbose=2)
 print(f'\nTest Accuracy: {test_acc}')
 
-model.summary()
+# Training Plot
+plot_graph()
 
-# Making predictions
-probability_model = Sequential([model, layers.Softmax()])
-predictions = probability_model.predict(test_ds) # array of numbers representing its confidence for each class
+### Making predictions ###
+predictions = model.predict(test_img) # array of numbers representing its confidence for each class
 
-"""
 # Verifying predictions using test images and prediction arrays
 num_rows = 5
 num_cols = 3
 num_images = num_rows*num_cols
 plt.figure(figsize=(2*2*num_cols, 2*num_rows))
-for images, labels in test_ds.take(1):
-    for i in range(num_images):
-        plt.subplot(num_rows, 2*num_cols, 2*i+1)
-        plot_image(i, predictions[i], labels, images)
-        plt.subplot(num_rows, 2*num_cols, 2*i+2)
-        plot_value_array(i, predictions[i], labels)
-    plt.tight_layout()
+for i in range(num_images):
+    plt.subplot(num_rows, 2*num_cols, 2*i+1)
+    plot_image(i, predictions[i], test_labels, test_img)
+    plt.subplot(num_rows, 2*num_cols, 2*i+2)
+    plot_value_array(i, predictions[i], test_labels)
+plt.tight_layout()
 
 # Model Summary
-model.summary()
+model.summary() # DEBUG
 
-plt.show()"""
+img = load_img('seven.jpg', target_size=(img_height, img_width))
+img = np.expand_dims(img_to_array(img), 0)
+predictions_single = model.predict(img)
+plt.figure()
+plot_value_array(1, predictions_single[0], test_labels)
+_ = plt.xticks(range(9), class_names, rotation = 45)
+print(f"{100*np.max(predictions_single[0]):2.0f}% confidence")
+
+# show all plots
+plt.show()
+
+# Saving Model
+model.save('saved_model/CNN_model')
