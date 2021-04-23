@@ -1,4 +1,4 @@
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from tensorflow.keras.preprocessing.image import load_img, img_to_array, ImageDataGenerator
 from tensorflow.keras.layers.experimental import preprocessing
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential, layers
@@ -23,14 +23,12 @@ def plot_graph():
     plt.plot(epochs_range, acc, label='Training Accuracy')
     plt.plot(epochs_range, val_acc, label='Validation Accuracy')
     plt.legend(loc='lower right')
-    plt.xlabel('Epoch')
     plt.title('Training and Validation Accuracy')
 
     plt.subplot(2, 1, 2)
     plt.plot(epochs_range, loss, label='Training Loss')
     plt.plot(epochs_range, val_loss, label='Validation Loss')
     plt.legend(loc='upper right')
-    plt.xlabel('Epoch')
     plt.title('Training and Validation Loss')
 
 def plot_image(i, predictions_array, true_label, img):
@@ -66,11 +64,11 @@ num_classes = 9
 num_images = 11429
 img_height = 32
 img_width = 32
-batch_size = 100
+batch_size = 50
 
 train_ratio = 0.75
 validation_ratio = 0.15
-test_ratio = 0.1
+test_ratio = 0.10
 
 class_names = ['30km/hr','50km/hr','70km/hr', '80km/hr','100km/hr', 'Stop', 'Turn Right',
                'Turn Left', 'Straight']
@@ -80,7 +78,7 @@ data_dir = Path('Traffic Data')
 # Importing images and labels into dataset
 dataset = tf.keras.preprocessing.image_dataset_from_directory(
     data_dir,
-    seed = 123,
+    seed = 124,
     image_size = (img_height, img_width),
     batch_size = num_images)
 
@@ -92,58 +90,56 @@ for image_batch, labels_batch in dataset:
     break
 
 # Convert images to grayscale and normalizing to [0,1]
-images = images / 255.0
-
+images = color.rgb2gray(images) / 255.0
+images = np.expand_dims(images, 3)
 # Splitting data into training(0.75), validation(0.15), and test(0.1) data sets
-train_img, test_img, train_labels, test_labels = train_test_split(
-    images, labels, test_size = 1 - train_ratio)
-val_img, test_img, val_labels, test_labels = train_test_split(
-    test_img, test_labels, test_size = test_ratio / (test_ratio + validation_ratio))
+train_img, test_img, train_labels, test_labels = train_test_split(images, labels,
+                                                                  test_size = 1 - train_ratio)
+val_img, test_img, val_labels, test_labels = train_test_split(test_img, test_labels,
+                                                              test_size = test_ratio / (test_ratio + validation_ratio))
+### Building the Sequential Model
+# Data Augmentation Preprocessing
+data_augmentation = tf.keras.Sequential([
+    preprocessing.RandomRotation(0.1),
+    preprocessing.RandomZoom(0.3),
+    #preprocessing.RandomTranslation(0.1, 0.1)
+    ])
 
-data_augmentation = Sequential([
-    preprocessing.RandomFlip('horizontal'),
-    preprocessing.RandomRotation(0.1, input_shape=(32, 32, 3)),
-    preprocessing.RandomZoom(0.1)])
-
+# Setting up layers
 model = Sequential([
+    # Dense: output = activation(dot(input, kernel "W matrix") + bias)
     data_augmentation,
-    layers.Conv2D(32, 3, activation='relu'), # 30 30 (32)
-    layers.Conv2D(32, 3, activation='relu'), # 28 28 (32)
-    layers.MaxPooling2D((2, 2)),             # 14 14 (32)
-    layers.Dropout(0.25),
-    layers.Conv2D(64, 3, activation='relu'), # 12 12 (64)
-    layers.Conv2D(64, 3, activation='relu'), # 10 10 (64)
-    layers.MaxPooling2D((2, 2)),             # 5 5 (64)
-    layers.Dropout(0.25),
-    layers.Flatten(),                        # 1600
-    layers.Dense(800, activation = 'relu'),  # 1600 -> 800
-    layers.Dropout(0.5),
-    layers.Dense(num_classes, activation='softmax',name="Output")]) # classes options
-
+    layers.Flatten(input_shape = (32, 32), name = 'Input'),  # Tranforms format of images from 2D->1D array
+    layers.Dense(1024, activation = 'relu', name = 'Layer1'),# 1024 nodes
+    layers.Dropout(0.3),
+    layers.Dense(512, activation = 'relu', name = 'Layer2'), # 512 nodes
+    layers.Dropout(0.2),
+    layers.Dense(256, activation = 'relu', name = 'Layer3'), # 256 nodes
+    layers.Dropout(0.2),
+    layers.Dense(128, activation = 'relu', name = 'Layer4'), # 128 nodes
+    layers.Dropout(0.2),
+    layers.Dense(num_classes, activation = 'sigmoid',name = "Output")]) # last layer (classes options)
 # Compiling Model
 model.compile(
     optimizer = 'adam', # how model is updated based on data and loss function
-    loss = tf.keras.losses.SparseCategoricalCrossentropy(), # measures model accuracy
+    loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True), # measures model accuracy
     metrics = ['accuracy']) # monitor training and testing steps
 
 # Training model
-epochs = 20
+epochs = 50
 #history = model.fit(train_img, train_labels, batch_size = 200, epochs = epochs) #
 history = model.fit(train_img, train_labels,
                     validation_data=(val_img, val_labels),
-                    batch_size=batch_size,
-                    epochs=epochs,
-                    verbose=2)
+                    batch_size = batch_size,
+                    epochs = epochs)
 
-# Evaluate accuracy
-test_loss, test_acc = model.evaluate(test_img, test_labels, verbose=2)
+# Evaluate accuracy and score
+test_loss, test_acc = model.evaluate(test_img, test_labels)
 print(f'\nTest Accuracy: {test_acc}')
 
-# Training Plot
-plot_graph()
-
-### Making predictions ###
-predictions = model.predict(test_img) # array of numbers representing its confidence for each class
+# Making predictions
+probability_model = Sequential([model, layers.Softmax()])
+predictions = probability_model.predict(test_img) # array of numbers representing its confidence for each class
 
 # Verifying predictions using test images and prediction arrays
 num_rows = 5
@@ -160,16 +156,26 @@ plt.tight_layout()
 # Model Summary
 model.summary() # DEBUG
 
-img = load_img('seven.jpg', target_size=(img_height, img_width))
-img = np.expand_dims(img_to_array(img), 0)
-predictions_single = model.predict(img)
-plt.figure()
-plot_value_array(1, predictions_single[0], test_labels)
-_ = plt.xticks(range(9), class_names, rotation = 45)
-print(f"{100*np.max(predictions_single[0]):2.0f}% confidence")
-
-# show all plots
+# DEBUGGING MODELS
+plot_graph()
 plt.show()
 
-# Saving Model
-model.save('saved_model/CNN_model')
+"""
+# Using trained model to test an image
+img = tf.image.resize(img_to_array(load_img('stop.jpg')), (32,32))
+img = np.expand_dims(img, 0)
+print(img.shape)
+predictions_single = probability_model.predict(img)
+plot_value_array(1, predictions_single[0], test_labels)
+_ = plt.xticks(range(9), class_names, rotation = 45)
+plt.show()
+
+
+img = tf.image.resize(mpimg.imread('stop.jpg'), (32, 32) # Import and resize
+img = (np.expand_dims(color.rgb2gray(img), 0))  # Grayscale and turn to batch
+img = np.expand_dims(img, 0)
+predictions_single = probability_model.predict(img)
+plot_value_array(1, predictions_single[0], test_labels)
+_ = plt.xticks(range(9), class_names, rotation = 45)
+print(np.argmax(predictions_single[0]))
+plt.show()"""
