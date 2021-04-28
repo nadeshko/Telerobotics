@@ -132,7 +132,7 @@ def CNN_model():
     plt.show()
 
     # Saving Model
-    model.save('saved_model/CNN_model')
+    #model.save('saved_model/CNN_model')
 
 def API_model():
     pass
