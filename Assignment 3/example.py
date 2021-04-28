@@ -36,7 +36,7 @@ cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     frameCounter = 0
-    cap = cv2.VideoCapture('###########.mp4')
+    cap = cv2.VideoCapture('LowRes.mp4')
     while True:
         frameCounter += 1
         if cap.get(cv2.CAP_PROP_FRAME_COUNT) == frameCounter:
