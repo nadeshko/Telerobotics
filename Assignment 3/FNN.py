@@ -108,10 +108,10 @@ data_augmentation = tf.keras.Sequential([
 # Setting up layers
 model = Sequential([
     # Dense: output = activation(dot(input, kernel "W matrix") + bias)
-    data_augmentation,
+    #data_augmentation,
     layers.Flatten(input_shape = (32, 32), name = 'Input'),  # Tranforms format of images from 2D->1D array
     layers.Dense(1024, activation = 'relu', name = 'Layer1'),# 1024 nodes
-    layers.Dropout(0.3),
+    layers.Dropout(0.2),
     layers.Dense(512, activation = 'relu', name = 'Layer2'), # 512 nodes
     layers.Dropout(0.2),
     layers.Dense(256, activation = 'relu', name = 'Layer3'), # 256 nodes

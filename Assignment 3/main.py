@@ -140,8 +140,8 @@ def API_model():
 # Initial Parameters
 num_classes = 9
 num_images = 11429
-img_height = 32
-img_width = 32
+img_height = 128
+img_width = 128
 batch_size = 100
 
 train_ratio = 0.75
