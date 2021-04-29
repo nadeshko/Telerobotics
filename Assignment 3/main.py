@@ -2,7 +2,6 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.layers.experimental import preprocessing
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential, layers, optimizers
-from skimage import color
 from pathlib import Path
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -62,12 +61,12 @@ def plot_value_array(i, predictions_array, true_label):
 
 def CNN_model():
     data_aug = ImageDataGenerator(
-        rotation_range=30,
-        zoom_range=0.15,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.15,
-        horizontal_flip=True,
+        rotation_range=25,
+        zoom_range=0.2,
+        width_shift_range=0.25,
+        height_shift_range=0.25,
+        shear_range=0.1,
+        horizontal_flip=False,
         fill_mode="nearest")
 
     model = Sequential()
@@ -135,15 +134,6 @@ def CNN_model():
         plot_value_array(i, predictions[i], test_labels)
     plt.tight_layout()
 
-    """
-    img = load_img('seven.jpg', target_size=(img_height, img_width))
-    img = np.expand_dims(img_to_array(img), 0)
-    predictions_single = model.predict(img)
-    plt.figure()
-    plot_value_array(1, predictions_single[0], test_labels)
-    _ = plt.xticks(range(9), class_names, rotation=45)
-    print(f"{100 * np.max(predictions_single[0]):2.0f}% confidence")"""
-
     # show all plots
     plt.show()
 
@@ -186,7 +176,6 @@ if __name__ == '__main__':
 
     # Convert images to grayscale and normalizing to [0,1]
     images = images / 255.0
-    #images = np.expand_dims(images, 3)
 
     # Splitting data into training(0.75), validation(0.15), and test(0.1) data sets
     train_img, test_img, train_labels, test_labels = train_test_split(
