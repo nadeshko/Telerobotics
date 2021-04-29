@@ -1,5 +1,4 @@
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.layers.experimental import preprocessing
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential, layers, optimizers
 from pathlib import Path
@@ -62,7 +61,7 @@ def plot_value_array(i, predictions_array, true_label):
 def CNN_model():
     data_aug = ImageDataGenerator(
         rotation_range=30,
-        zoom_range=0.2,
+        zoom_range=0.3,
         width_shift_range=0.3,
         height_shift_range=0.3,
         shear_range=0.3,
