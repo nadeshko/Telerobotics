@@ -12,7 +12,7 @@ frameCounter = 0 # DEBUG
 # Load saved model
 
 model = models.load_model('saved_model/CNN_model') # input: 1x32x32x3
-video = cv2.VideoCapture('LowRes4.mp4')
+video = cv2.VideoCapture('LowRes.mp4')
 
 while True:
     frameCounter += 1
@@ -24,10 +24,10 @@ while True:
 
     size = frame.shape
     border = int((size[1]-size[0])/2)
-    im = cv2.copyMakeBorder(frame, border, border, 0, 0, cv2.BORDER_CONSTANT)
+    #im = cv2.copyMakeBorder(frame, border, border, 0, 0, cv2.BORDER_CONSTANT)
 
     # convert captures into RGB
-    im = Image.fromarray(im, 'RGB')
+    im = Image.fromarray(frame, 'RGB')
 
     # Resizing into 32x32
     im = im.resize((32, 32))

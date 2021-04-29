@@ -82,7 +82,7 @@ def CNN_model():
     model.add(layers.Conv2D(64, 3, activation='relu'))
     model.add(layers.BatchNormalization())
     model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Dropout(0.3))
+    model.add(layers.Dropout(0.25))
     # Flattening
     model.add(layers.Flatten())
     # Fully connected layer
@@ -99,7 +99,7 @@ def CNN_model():
         metrics=['accuracy'])  # monitor training and testing steps
 
     # Training model
-    epochs = 30
+    epochs = 50
     # history = model.fit(train_img, train_labels, batch_size = 200, epochs = epochs) #
     CNN_history = model.fit(data_aug.flow(train_img, train_labels,
                                          batch_size=batch_size,
