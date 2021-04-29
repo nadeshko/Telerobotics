@@ -61,24 +61,24 @@ def plot_value_array(i, predictions_array, true_label):
 
 def CNN_model():
     data_aug = ImageDataGenerator(
-        rotation_range=20,
+        rotation_range=30,
         zoom_range=0.2,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.15,
+        width_shift_range=0.3,
+        height_shift_range=0.3,
+        shear_range=0.3,
         horizontal_flip=True,
         fill_mode="nearest")
 
     model = Sequential()
     model.add(layers.Conv2D(32, 3, activation='relu', input_shape=(32,32,3)))
-    #model.add(layers.BatchNormalization())
+    model.add(layers.BatchNormalization())
     model.add(layers.Conv2D(32, 3, activation='relu'))
     model.add(layers.BatchNormalization())
     model.add(layers.MaxPooling2D((2, 2)))
     model.add(layers.Dropout(0.25))
 
     model.add(layers.Conv2D(64, 3, activation='relu'))
-    #model.add(layers.BatchNormalization())
+    model.add(layers.BatchNormalization())
     model.add(layers.Conv2D(64, 3, activation='relu'))
     model.add(layers.BatchNormalization())
     model.add(layers.MaxPooling2D((2, 2)))
@@ -87,6 +87,10 @@ def CNN_model():
     model.add(layers.Flatten())
     # Fully connected layer
     model.add(layers.Dense(800, activation='relu'))
+    model.add(layers.Dropout(0.5))
+    model.add(layers.Dense(400, activation='relu'))
+    model.add(layers.Dropout(0.5))
+    model.add(layers.Dense(200, activation='relu'))
     model.add(layers.Dropout(0.5))
     model.add(layers.Dense(num_classes, activation='softmax'))
 
