@@ -63,7 +63,7 @@ def plot_value_array(i, predictions_array, true_label):
 def CNN_model():
     data_augmentation = Sequential([
         preprocessing.RandomFlip('horizontal'),
-        preprocessing.RandomRotation(0.2),
+        preprocessing.RandomRotation(0.2, input_shape=(32, 32, 1)),
         preprocessing.RandomZoom(0.2)])
 
     model = Sequential()
@@ -83,8 +83,6 @@ def CNN_model():
     model.add(layers.Conv2D(64, 3))
     model.add(layers.BatchNormalization())
     model.add(layers.Activation('relu'))
-    model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Dropout(0.2))
 
     # Flattening
     model.add(layers.Flatten())
@@ -97,7 +95,7 @@ def CNN_model():
 
     model.add(layers.Dense(num_classes, activation='softmax'))
 
-    opt = optimizers.Adam(lr=0.0001)
+    opt = optimizers.Adam(learning_rate=0.0001)
 
     # Compiling Model
     model.compile(
@@ -156,47 +154,47 @@ def CNN_model():
 def API_model():
     pass
 
-# Initial Parameters
-num_classes = 9
-num_images = 11429
-img_height = 32
-img_width = 32
-batch_size = 100
-
-train_ratio = 0.75
-validation_ratio = 0.15
-test_ratio = 0.1
-
-class_names = ['30km/hr', '50km/hr', '70km/hr', '80km/hr', '100km/hr', 'Stop', 'Turn Right',
-                'Turn Left', 'Straight']
-
-data_dir = Path('Traffic Data')
-
-# Importing images and labels into dataset
-dataset = tf.keras.preprocessing.image_dataset_from_directory(
-    data_dir,
-    seed=123,
-    image_size=(img_height, img_width),
-    batch_size=num_images)
-
-# moving images & labels to n-dimension array
-images, labels = [], []
-for image_batch, labels_batch in dataset:
-    images = image_batch.numpy().astype("uint8")
-    labels = labels_batch.numpy()
-    break
-
-# Convert images to grayscale and normalizing to [0,1]
-iamges = color.rgb2gray(images)
-images = images / 255.0
-
-# Splitting data into training(0.75), validation(0.15), and test(0.1) data sets
-train_img, test_img, train_labels, test_labels = train_test_split(
-    images, labels, test_size=1 - train_ratio)
-val_img, test_img, val_labels, test_labels = train_test_split(
-    test_img, test_labels, test_size=test_ratio / (test_ratio + validation_ratio))
-
 if __name__ == '__main__':
+    # Initial Parameters
+    num_classes = 9
+    num_images = 11429
+    img_height = 32
+    img_width = 32
+    batch_size = 100
+
+    train_ratio = 0.75
+    validation_ratio = 0.15
+    test_ratio = 0.1
+
+    class_names = ['30km/hr', '50km/hr', '70km/hr', '80km/hr', '100km/hr', 'Stop', 'Turn Right',
+                   'Turn Left', 'Straight']
+
+    data_dir = Path('Traffic Data')
+
+    # Importing images and labels into dataset
+    dataset = tf.keras.preprocessing.image_dataset_from_directory(
+        data_dir,
+        seed=123,
+        image_size=(img_height, img_width),
+        batch_size=num_images)
+
+    # moving images & labels to n-dimension array
+    images, labels = [], []
+    for image_batch, labels_batch in dataset:
+        images = image_batch.numpy().astype("uint8")
+        labels = labels_batch.numpy()
+        break
+
+    # Convert images to grayscale and normalizing to [0,1]
+    images = color.rgb2gray(images) / 255.0
+    images = np.expand_dims(images, 3)
+
+    # Splitting data into training(0.75), validation(0.15), and test(0.1) data sets
+    train_img, test_img, train_labels, test_labels = train_test_split(
+        images, labels, test_size= 1 - train_ratio)
+    val_img, test_img, val_labels, test_labels = train_test_split(
+        test_img, test_labels, test_size=test_ratio / (test_ratio + validation_ratio))
+
     # Uncomment which model to train and test
     CNN_model()
     #API_model()
