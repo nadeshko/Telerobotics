@@ -1,7 +1,8 @@
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from tensorflow.keras.layers.experimental import preprocessing
 from sklearn.model_selection import train_test_split
-from tensorflow.keras import Sequential, layers
+from tensorflow.keras import Sequential, layers, optimizers
+from skimage import color
 from pathlib import Path
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -62,38 +63,58 @@ def plot_value_array(i, predictions_array, true_label):
 def CNN_model():
     data_augmentation = Sequential([
         preprocessing.RandomFlip('horizontal'),
-        preprocessing.RandomRotation(0.1, input_shape=(32, 32, 3)),
-        preprocessing.RandomZoom(0.1)])
+        preprocessing.RandomRotation(0.2),
+        preprocessing.RandomZoom(0.2)])
 
-    model = Sequential([
-        data_augmentation,
-        layers.Conv2D(32, 3, activation='relu'),  # 30 30 (32)
-        layers.Conv2D(32, 3, activation='relu'),  # 28 28 (32)
-        layers.MaxPooling2D((2, 2)),  # 14 14 (32)
-        layers.Dropout(0.25),
-        layers.Conv2D(64, 3, activation='relu'),  # 12 12 (64)
-        layers.Conv2D(64, 3, activation='relu'),  # 10 10 (64)
-        layers.MaxPooling2D((2, 2)),  # 5 5 (64)
-        layers.Dropout(0.25),
-        layers.Flatten(),  # 1600
-        layers.Dense(800, activation='relu'),  # 1600 -> 800
-        layers.Dropout(0.5),
-        layers.Dense(num_classes, activation='softmax', name="Output")])  # classes options
+    model = Sequential()
+    model.add(data_augmentation)
+    model.add(layers.Conv2D(32, 3))
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation('relu'))
+    model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Dropout(0.2))
+
+    model.add(layers.Conv2D(64, 5))
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation('relu'))
+    model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Dropout(0.2))
+
+    model.add(layers.Conv2D(64, 3))
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation('relu'))
+    model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Dropout(0.2))
+
+    # Flattening
+    model.add(layers.Flatten())
+
+    # Fully connected layer 1st layer
+    model.add(layers.Dense(256))
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation('relu'))
+    model.add(layers.Dropout(0.5))
+
+    model.add(layers.Dense(num_classes, activation='softmax'))
+
+    opt = optimizers.Adam(lr=0.0001)
 
     # Compiling Model
     model.compile(
-        optimizer='adam',  # how model is updated based on data and loss function
+        optimizer=opt,  # how model is updated based on data and loss function
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),  # measures model accuracy
         metrics=['accuracy'])  # monitor training and testing steps
 
     # Training model
-    epochs = 20
+    epochs = 30
     # history = model.fit(train_img, train_labels, batch_size = 200, epochs = epochs) #
     CNN_history = model.fit(train_img, train_labels,
                         validation_data=(val_img, val_labels),
                         batch_size=batch_size,
-                        epochs=epochs,
-                        verbose=2)
+                        epochs=epochs)
+
+    # Model Summary
+    model.summary()
 
     # Evaluate accuracy
     test_loss, test_acc = model.evaluate(test_img, test_labels, verbose=2)
@@ -117,16 +138,14 @@ def CNN_model():
         plot_value_array(i, predictions[i], test_labels)
     plt.tight_layout()
 
-    # Model Summary
-    model.summary()
-
+    """
     img = load_img('seven.jpg', target_size=(img_height, img_width))
     img = np.expand_dims(img_to_array(img), 0)
     predictions_single = model.predict(img)
     plt.figure()
     plot_value_array(1, predictions_single[0], test_labels)
     _ = plt.xticks(range(9), class_names, rotation=45)
-    print(f"{100 * np.max(predictions_single[0]):2.0f}% confidence")
+    print(f"{100 * np.max(predictions_single[0]):2.0f}% confidence")"""
 
     # show all plots
     plt.show()
@@ -140,8 +159,8 @@ def API_model():
 # Initial Parameters
 num_classes = 9
 num_images = 11429
-img_height = 128
-img_width = 128
+img_height = 32
+img_width = 32
 batch_size = 100
 
 train_ratio = 0.75
@@ -168,6 +187,7 @@ for image_batch, labels_batch in dataset:
     break
 
 # Convert images to grayscale and normalizing to [0,1]
+iamges = color.rgb2gray(images)
 images = images / 255.0
 
 # Splitting data into training(0.75), validation(0.15), and test(0.1) data sets
