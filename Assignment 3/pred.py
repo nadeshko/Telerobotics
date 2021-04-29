@@ -43,7 +43,7 @@ while True:
     font = cv2.FONT_HERSHEY_COMPLEX
     cv2.putText(frame, f'{confidence}% {predicted_class}',
                 (int(size[1]-size[1]*0.4), int(size[0]-size[0]*0.1)),
-                font, 1.5, (0, 0, 255), 2, cv2.LINE_4)
+                font, 1.5, (255, 0, 0), 2, cv2.LINE_4)
     cv2.imshow('Prediction', frame)
 
     key = cv2.waitKey(1)

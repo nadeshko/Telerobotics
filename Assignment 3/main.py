@@ -1,4 +1,4 @@
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.layers.experimental import preprocessing
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential, layers, optimizers
@@ -61,36 +61,33 @@ def plot_value_array(i, predictions_array, true_label):
     this_plot[true_label].set_color('blue')
 
 def CNN_model():
-    data_augmentation = Sequential([
-        preprocessing.RandomFlip('horizontal'),
-        preprocessing.RandomRotation(0.2, input_shape=(32, 32, 1)),
-        preprocessing.RandomZoom(0.2)])
+    data_aug = ImageDataGenerator(
+        rotation_range=30,
+        zoom_range=0.15,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.15,
+        horizontal_flip=True,
+        fill_mode="nearest")
 
     model = Sequential()
-    model.add(data_augmentation)
-    model.add(layers.Conv2D(32, 3))
+    model.add(layers.Conv2D(32, 3, activation='relu'))
+    model.add(layers.Conv2D(32, 3, activation='relu'))
     model.add(layers.BatchNormalization())
-    model.add(layers.Activation('relu'))
     model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Dropout(0.2))
+    model.add(layers.Dropout(0.25))
 
-    model.add(layers.Conv2D(64, 5))
+    model.add(layers.Conv2D(64, 3, activation='relu'))
+    model.add(layers.Conv2D(64, 3, activation='relu'))
     model.add(layers.BatchNormalization())
-    model.add(layers.Activation('relu'))
     model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Dropout(0.2))
-
-    model.add(layers.Conv2D(64, 3))
-    model.add(layers.BatchNormalization())
-    model.add(layers.Activation('relu'))
+    model.add(layers.Dropout(0.25))
 
     # Flattening
     model.add(layers.Flatten())
 
-    # Fully connected layer 1st layer
-    model.add(layers.Dense(256))
-    model.add(layers.BatchNormalization())
-    model.add(layers.Activation('relu'))
+    # Fully connected layer
+    model.add(layers.Dense(800, activation='relu'))
     model.add(layers.Dropout(0.5))
 
     model.add(layers.Dense(num_classes, activation='softmax'))
@@ -104,12 +101,14 @@ def CNN_model():
         metrics=['accuracy'])  # monitor training and testing steps
 
     # Training model
-    epochs = 30
+    epochs = 20
     # history = model.fit(train_img, train_labels, batch_size = 200, epochs = epochs) #
-    CNN_history = model.fit(train_img, train_labels,
-                        validation_data=(val_img, val_labels),
-                        batch_size=batch_size,
-                        epochs=epochs)
+    CNN_history = model.fit(data_aug.flow(train_img, train_labels,
+                                         batch_size=batch_size,
+                                         seed=25,
+                                         shuffle=False),
+                            epochs=epochs,
+                            validation_data=(val_img, val_labels))
 
     # Model Summary
     model.summary()
@@ -149,7 +148,7 @@ def CNN_model():
     plt.show()
 
     # Saving Model
-    #model.save('saved_model/CNN_model')
+    model.save('saved_model/CNN_model')
 
 def API_model():
     pass
@@ -160,7 +159,7 @@ if __name__ == '__main__':
     num_images = 11429
     img_height = 32
     img_width = 32
-    batch_size = 100
+    batch_size = 128
 
     train_ratio = 0.75
     validation_ratio = 0.15
@@ -186,8 +185,8 @@ if __name__ == '__main__':
         break
 
     # Convert images to grayscale and normalizing to [0,1]
-    images = color.rgb2gray(images) / 255.0
-    images = np.expand_dims(images, 3)
+    images = images / 255.0
+    #images = np.expand_dims(images, 3)
 
     # Splitting data into training(0.75), validation(0.15), and test(0.1) data sets
     train_img, test_img, train_labels, test_labels = train_test_split(
