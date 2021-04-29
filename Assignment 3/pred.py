@@ -12,7 +12,7 @@ frameCounter = 0 # DEBUG
 # Load saved model
 
 model = models.load_model('saved_model/CNN_model') # input: 1x32x32x3
-video = cv2.VideoCapture('LowRes.mp4')
+video = cv2.VideoCapture('LowRes4.mp4')
 
 while True:
     frameCounter += 1

@@ -61,37 +61,36 @@ def plot_value_array(i, predictions_array, true_label):
 
 def CNN_model():
     data_aug = ImageDataGenerator(
-        rotation_range=25,
+        rotation_range=20,
         zoom_range=0.2,
-        width_shift_range=0.25,
-        height_shift_range=0.25,
-        shear_range=0.1,
-        horizontal_flip=False,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.15,
+        horizontal_flip=True,
         fill_mode="nearest")
 
     model = Sequential()
-    model.add(layers.Conv2D(32, 3, activation='relu'))
+    model.add(layers.Conv2D(32, 3, activation='relu', input_shape=(32,32,3)))
+    #model.add(layers.BatchNormalization())
     model.add(layers.Conv2D(32, 3, activation='relu'))
     model.add(layers.BatchNormalization())
     model.add(layers.MaxPooling2D((2, 2)))
     model.add(layers.Dropout(0.25))
 
     model.add(layers.Conv2D(64, 3, activation='relu'))
+    #model.add(layers.BatchNormalization())
     model.add(layers.Conv2D(64, 3, activation='relu'))
     model.add(layers.BatchNormalization())
     model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Dropout(0.25))
-
+    model.add(layers.Dropout(0.3))
     # Flattening
     model.add(layers.Flatten())
-
     # Fully connected layer
     model.add(layers.Dense(800, activation='relu'))
     model.add(layers.Dropout(0.5))
-
     model.add(layers.Dense(num_classes, activation='softmax'))
 
-    opt = optimizers.Adam(learning_rate=0.0001)
+    opt = optimizers.Adam(learning_rate=0.001)
 
     # Compiling Model
     model.compile(
@@ -100,11 +99,10 @@ def CNN_model():
         metrics=['accuracy'])  # monitor training and testing steps
 
     # Training model
-    epochs = 20
+    epochs = 30
     # history = model.fit(train_img, train_labels, batch_size = 200, epochs = epochs) #
     CNN_history = model.fit(data_aug.flow(train_img, train_labels,
                                          batch_size=batch_size,
-                                         seed=25,
                                          shuffle=False),
                             epochs=epochs,
                             validation_data=(val_img, val_labels))
