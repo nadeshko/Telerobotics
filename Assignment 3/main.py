@@ -139,7 +139,90 @@ def CNN_model():
     model.save('saved_model/CNN_model')
 
 def API_model():
-    pass
+    data_aug = ImageDataGenerator(
+        rotation_range=30,
+        zoom_range=0.3,
+        width_shift_range=0.3,
+        height_shift_range=0.3,
+        shear_range=0.3,
+        horizontal_flip=True,
+        fill_mode="nearest")
+
+    inputs = tf.keras.Input(shape=(32, 32, 3))
+    x = layers.Conv2D(32, 3)(inputs)
+    x = layers.BatchNormalization()(x)
+    x = tf.keras.activations.relu(x)
+    x = layers.Conv2D(32, 3)(x)
+    x = layers.BatchNormalization()(x)
+    x = tf.keras.activations.relu(x)
+    x = layers.MaxPooling2D()(x)
+    x = layers.Dropout(0.25)(x)
+
+    x = layers.Conv2D(64, 3)(x)
+    x = layers.BatchNormalization()(x)
+    x = tf.keras.activations.relu(x)
+    x = layers.Conv2D(64, 3)(x)
+    x = layers.BatchNormalization()(x)
+    x = tf.keras.activations.relu(x)
+    x = layers.MaxPooling2D()(x)
+    x = layers.Dropout(0.25)(x)
+
+    x = layers.Flatten()(x)
+
+    x = layers.Dense(800, activation='relu')(x)
+    x = layers.Dropout(0.5)(x)
+    x = layers.Dense(400, activation='relu')(x)
+    x = layers.Dropout(0.5)(x)
+    x = layers.Dense(200, activation='relu')(x)
+    x = layers.Dropout(0.5)(x)
+    outputs = layers.Dense(num_classes, activation='softmax')(x)
+
+    model = tf.keras.Model(inputs=inputs, outputs=outputs)
+
+    opt = optimizers.Adam(learning_rate=0.001)
+
+    # Compiling Model
+    model.compile(
+        optimizer=opt,  # how model is updated based on data and loss function
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(),  # measures model accuracy
+        metrics=['accuracy'])  # monitor training and testing steps
+
+    # Training model
+    epochs = 50
+    # history = model.fit(train_img, train_labels, batch_size = 200, epochs = epochs) #
+    CNN_history = model.fit(data_aug.flow(train_img, train_labels,
+                                          batch_size=batch_size,
+                                          shuffle=False),
+                            epochs=epochs,
+                            validation_data=(val_img, val_labels))
+
+    # Model Summary
+    model.summary()
+
+    # Evaluate accuracy
+    test_loss, test_acc = model.evaluate(test_img, test_labels, verbose=2)
+    print(f'\nTest Accuracy: {test_acc}')
+
+    # Training Plot
+    plot_graph(CNN_history, epochs)
+
+    ### Making predictions ###
+    predictions = model.predict(test_img)  # array of numbers representing its confidence for each class
+
+    # Verifying predictions using test images and prediction arrays
+    num_rows = 5
+    num_cols = 3
+    num_images = num_rows * num_cols
+    plt.figure(figsize=(2 * 2 * num_cols, 2 * num_rows))
+    for i in range(num_images):
+        plt.subplot(num_rows, 2 * num_cols, 2 * i + 1)
+        plot_image(i, predictions[i], test_labels, test_img)
+        plt.subplot(num_rows, 2 * num_cols, 2 * i + 2)
+        plot_value_array(i, predictions[i], test_labels)
+    plt.tight_layout()
+
+    # show all plots
+    plt.show()
 
 if __name__ == '__main__':
     # Initial Parameters
