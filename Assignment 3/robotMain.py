@@ -73,60 +73,72 @@ if __name__ == '__main__':
     LeftM.start(0)
 
     # Import CSV file
-    results = []
+    process = []
     with open("robot_control.csv") as csvfile:
         reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
         for row in reader:
-            results.append(row)
+            process.append(row)
 
     # Seperate classes and frames
     classes, frames = [], []
-    for x, y in results:
-        classes.append(x)
-        frames.append(y)
+    for a1, a2 in process:
+        classes.append(a1)
+        frames.append(a2)
 
     # Get time stamp and specific class
     action, time_stamp = [], []
-    for index, elem in enumerate(frames):
-        if elem == 0:
+    for index, element in enumerate(frames):
+        if element == 0:
             time_stamp.append(frames[index - 1])
             action.append(classes[index - 1])
-    time_stamp.append(frames[-1]) # Append last action
+    # Append last action and time
+    time_stamp.append(frames[-1])
     action.append(classes[-1])
 
     # Go through action list according to time stamp
-    for i, classes in enumerate(action):
-        if classes == 0:
+    for i, Class in enumerate(action):
+        # 30 km/hr, 30% duty cycle
+        if Class == 0:
             print('moving at 30%')
             L_Spd, R_Spd = 0.3, 0.3
-        elif classes == 1:
+        # 50 km/hr, 50% duty cycle
+        elif Class == 1:
             print('moving at 50%')
             L_Spd, R_Spd = 0.4, 0.4
-        elif classes == 2:
+        # 70 km/hr, 70% duty cycle
+        elif Class == 2:
             print('moving at 70%')
             L_Spd, R_Spd = 0.7, 0.7
-        elif classes == 3:
+        # 80 km/hr, 80% duty cycle
+        elif Class == 3:
             print('moving at 80%')
             L_Spd, R_Spd = 0.8, 0.8
-        elif classes == 4:
+        # 100 km/hr, 100% duty cycle
+        elif Class == 4:
             print('moving at 100%')
             L_Spd, R_Spd = 1.0, 1.0
-        elif classes == 5:
+        # Stop, 0% duty cycle
+        elif Class == 5:
             print('Stopping')
             R_Spd, L_Spd = 0.0, 0.0
-        elif classes == 6:
+        # Turning Right, higher duty cycle on left motor
+        elif Class == 6:
             print('Turning Right')
             R_Spd = -R_Spd
             L_Spd = abs(L_Spd)
-        elif classes == 7:
+        # Turning Left, higher duty cycle on right motor
+        elif Class == 7:
             print('Turning Left')
             L_Spd = -L_Spd
             R_Spd = abs(R_Spd)
-        elif classes == 8:
+        # Going straight, same positive duty cycle for both motor
+        elif Class == 8:
             print('Going Straight')
             R_Spd = abs(R_Spd)
             L_Spd = abs(L_Spd)
 
+        # action depending on Class
         move(L_Spd, R_Spd)
-        sleep(time_stamp[i]/75) # Assuming its 75 fps
+        # duration for action, assuming video is at 75 fps
+        sleep(time_stamp[i]/75)
 
