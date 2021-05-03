@@ -98,52 +98,19 @@ if __name__ == '__main__':
     for i, label in enumerate(action):
         if label == 0:
             print('moving at 30%')
-            if R_Spd >= 0:
-                R_Spd = 0.3
-            else: R_Spd = -0.3
-            if L_Spd >= 0:
-                L_Spd = 0.3
-            else: L_Spd = -0.3
+            L_Spd, R_Spd = 0.35, 0.35
         elif label == 1:
             print('moving at 50%')
-            if R_Spd >= 0:
-                R_Spd = 0.5
-            else:
-                R_Spd = -0.5
-            if L_Spd >= 0:
-                L_Spd = 0.5
-            else:
-                L_Spd = -0.5
+            L_Spd, R_Spd = 0.4, 0.4
         elif label == 2:
             print('moving at 70%')
-            if R_Spd >= 0:
-                R_Spd = 0.7
-            else:
-                R_Spd = -0.7
-            if L_Spd >= 0:
-                L_Spd = 0.7
-            else:
-                L_Spd = -0.7
+            L_Spd, R_Spd = 0.7, 0.7
         elif label == 3:
             print('moving at 80%')
-            if R_Spd >= 0:
-                R_Spd = 0.8
-            else:
-                R_Spd = -0.8
-            if L_Spd >= 0:
-                L_Spd = 0.8
-            else:
-                L_Spd = -0.8
+            L_Spd, R_Spd = 0.8, 0.8
         elif label == 4:
             print('moving at 100%')
-            if R_Spd >= 0:
-                R_Spd = 1.0
-            else:
-                R_Spd = -1.0
-            if L_Spd >= 0:
-                L_Spd = 1.0
-            else:
-                L_Spd = -1.0
+            L_Spd, R_Spd = 0.8, 0.8
         elif label == 5:
             print('Stopping')
             R_Spd, L_Spd = 0.0, 0.0
@@ -165,5 +132,5 @@ if __name__ == '__main__':
             L_Spd = abs(L_Spd)
 
         move(L_Spd, R_Spd)
-        sleep(time_stamp[i]/30) # Assuming its 30 fps
+        sleep(time_stamp[i]/75) # Assuming its 45 fps
 
