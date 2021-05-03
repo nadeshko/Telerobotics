@@ -106,7 +106,6 @@ def CNN_model():
                                          shuffle=False),
                             epochs=epochs,
                             validation_data=(val_img, val_labels))
-
     # Model Summary
     model.summary()
 
