@@ -1,10 +1,8 @@
-from tensorflow.keras.preprocessing.image import load_img, img_to_array, ImageDataGenerator
 from tensorflow.keras.layers.experimental import preprocessing
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential, layers
 from skimage import color
 from pathlib import Path
-import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
