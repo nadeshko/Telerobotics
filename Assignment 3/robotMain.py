@@ -95,42 +95,38 @@ if __name__ == '__main__':
     action.append(classes[-1])
 
     # Go through action list according to time stamp
-    for i, label in enumerate(action):
-        if label == 0:
+    for i, classes in enumerate(action):
+        if classes == 0:
             print('moving at 30%')
-            L_Spd, R_Spd = 0.35, 0.35
-        elif label == 1:
+            L_Spd, R_Spd = 0.3, 0.3
+        elif classes == 1:
             print('moving at 50%')
             L_Spd, R_Spd = 0.4, 0.4
-        elif label == 2:
+        elif classes == 2:
             print('moving at 70%')
             L_Spd, R_Spd = 0.7, 0.7
-        elif label == 3:
+        elif classes == 3:
             print('moving at 80%')
             L_Spd, R_Spd = 0.8, 0.8
-        elif label == 4:
+        elif classes == 4:
             print('moving at 100%')
-            L_Spd, R_Spd = 0.8, 0.8
-        elif label == 5:
+            L_Spd, R_Spd = 1.0, 1.0
+        elif classes == 5:
             print('Stopping')
             R_Spd, L_Spd = 0.0, 0.0
-        elif label == 6:
+        elif classes == 6:
             print('Turning Right')
-            if R_Spd >= 0:
-                R_Spd = -R_Spd
-            else: pass
-            L_Spd = abs(L_Spd) # Left motor always positive to turn right
-        elif label == 7:
+            R_Spd = -R_Spd
+            L_Spd = abs(L_Spd)
+        elif classes == 7:
             print('Turning Left')
-            if L_Spd >= 0:
-                L_Spd = -L_Spd
-            else: pass
-            R_Spd = abs(R_Spd) # Left motor always positive to turn right
-        elif label == 8:
+            L_Spd = -L_Spd
+            R_Spd = abs(R_Spd)
+        elif classes == 8:
             print('Going Straight')
             R_Spd = abs(R_Spd)
             L_Spd = abs(L_Spd)
 
         move(L_Spd, R_Spd)
-        sleep(time_stamp[i]/75) # Assuming its 45 fps
+        sleep(time_stamp[i]/75) # Assuming its 75 fps
 
