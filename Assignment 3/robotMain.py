@@ -42,6 +42,7 @@ def move(L_Spd = 0.6, R_Spd = 0.6):
         GPIO.output(IN4, False)
 
 if __name__ == '__main__':
+
     # Set GPIO call mode as BCM
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
@@ -104,7 +105,7 @@ if __name__ == '__main__':
         # 50 km/hr, 50% duty cycle
         elif Class == 1:
             print('moving at 50%')
-            L_Spd, R_Spd = 0.4, 0.4
+            L_Spd, R_Spd = 0.5, 0.5
         # 70 km/hr, 70% duty cycle
         elif Class == 2:
             print('moving at 70%')
@@ -139,6 +140,6 @@ if __name__ == '__main__':
 
         # action depending on Class
         move(L_Spd, R_Spd)
-        # duration for action, assuming video is at 75 fps
-        sleep(time_stamp[i]/75)
+        # duration for action, assuming video is at 30 fps
+        sleep(time_stamp[i]/30)
 

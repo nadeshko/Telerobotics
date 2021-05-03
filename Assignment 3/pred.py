@@ -35,7 +35,7 @@ timeCounter = 0
 model = models.load_model('saved_model/CNN_model') # input: 1x32x32x3
 video = cv2.VideoCapture('test2.mp4')
 
-class_labels = []
+raw_class = []
 class_list, time_stamp = [], []
 
 while True:
@@ -73,9 +73,9 @@ while True:
                 font, 1.5, (255, 0, 0), 2, cv2.LINE_4)
     cv2.imshow('Prediction', frame)
 
-    class_labels.append(np.argmax(prediction))
+    raw_class.append(np.argmax(prediction))
     # Ignoring random and uncertain values
-    class_list.append(get_majority(class_labels[frameCounter-23:frameCounter]))
+    class_list.append(get_majority(raw_class[frameCounter-23:frameCounter]))
     timeCounter += 1
     if frameCounter > 1:
         if class_list[frameCounter-1] != class_list[frameCounter-2]:
