@@ -23,7 +23,7 @@ This [Robot](http://www.xiaorgeek.com/vehicle-robots/tank-robots/raspberry-pi-ta
 Machine Learning using [Tensor Flow and Keras](https://www.tensorflow.org/tutorials/keras/classification)
 
 ## Other Files
-[Traffic Sign Dataset](https://beardatashare.bham.ac.uk/getlink/fiRGsn44ZVbKdDQd4yeTWSWa/) for the Machine Learning and Neural Network part
+[Traffic Sign Dataset](https://beardatashare.bham.ac.uk/getlink/fiRGsn44ZVbKdDQd4yeTWSWa/) for the Machine Learning and Neural Network part.  
 Download the Traffic Sign Dataset and place them in the same directory with main inside 3_MachineLearning N Neural Network. Rename the traffic sign dataset directory to Traffic Data.
 
 
