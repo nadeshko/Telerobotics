@@ -1,4 +1,4 @@
-# Telerobotics Project
+# Telerobotics
 Telerobotics Course for the University of Birmingham
 
 Contributors: William Lubiantoro, Chow Chun Hung "Simon"
